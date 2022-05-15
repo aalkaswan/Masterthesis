@@ -1,19 +1,237 @@
-@Article{CC90,
-  author =       "E. J. Chikofsky and J. H. Cross",
-  title =        "Reverse Engineering and Design Recovery: A Taxonomy",
-  journal =      "IEEE Software",
-  year =         1990,
-  volume =       7,
-  number =       1,
-  pages =        "13--17",
-  publisher =    "IEEE Computer Society Press",
+% This file was created with JabRef 2.3.1.
+% Encoding: ISO8859_1
+@article{TypeInferenceSurvey,
+author = {Caballero, Juan and Lin, Zhiqiang},
+title = {Type Inference on Executables},
+year = {2016},
+issue_date = {May 2016},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+volume = {48},
+number = {4},
+issn = {0360-0300},
+url = {https://doi.org/10.1145/2896499},
+doi = {10.1145/2896499},
+journal = {ACM Comput. Surv.},
+month = may,
+articleno = {65},
+numpages = {35},
+keywords = {binary code analysis, Type inference, program executables}
+}
+@INPROCEEDINGS{CATI,
+  author={Chen, Ligeng and He, Zhongling and Mao, Bing},
+  booktitle={2020 50th Annual IEEE/IFIP International Conference on Dependable Systems and Networks (DSN)}, 
+  title={CATI: Context-Assisted Type Inference from Stripped Binaries}, 
+  year={2020},
+  volume={},
+  number={},
+  pages={88-98},
+  doi={10.1109/DSN48063.2020.00028}}
+
+@misc{InlinedFunc,
+      title={Finding Inlined Functions in Optimized Binaries}, 
+      author={Toufique Ahmed and Premkumar Devanbu and Anand Ashok Sawant},
+      year={2021},
+      eprint={2103.05221},
+      archivePrefix={arXiv},
+      primaryClass={cs.SE}
 }
 
-@book{Whe95,
-  author =	 "Colin Wheildon",
-  title =	 "Type \& Layout",
-  publisher =	 "Strathmore Press",
-  note =	 "(ISBN 0 9624891 5 8)",
-  year =	 1995,
+@misc{roberta,
+      title={RoBERTa: A Robustly Optimized BERT Pretraining Approach}, 
+      author={Yinhan Liu and Myle Ott and Naman Goyal and Jingfei Du and Mandar Joshi and Danqi Chen and Omer Levy and Mike Lewis and Luke Zettlemoyer and Veselin Stoyanov},
+      year={2019},
+      eprint={1907.11692},
+      archivePrefix={arXiv},
+      primaryClass={cs.CL}
+}
+@inproceedings{allamanis_adverse,
+	address = {Athens Greece},
+	title = {The adverse effects of code duplication in machine learning models of code},
+	isbn = {978-1-4503-6995-4},
+	url = {https://dl.acm.org/doi/10.1145/3359591.3359735},
+	doi = {10.1145/3359591.3359735},
+	language = {en},
+	urldate = {2022-02-14},
+	booktitle = {Proceedings of the 2019 {ACM} {SIGPLAN} {International} {Symposium} on {New} {Ideas}, {New} {Paradigms}, and {Reflections} on {Programming} and {Software}},
+	publisher = {ACM},
+	author = {Allamanis, Miltiadis},
+	month = oct,
+	year = {2019},
+	pages = {143--153},
+	file = {Ingediende versie:C\:\\Users\\aalkaswan\\Zotero\\storage\\NM33LK4Y\\Allamanis - 2019 - The adverse effects of code duplication in machine.pdf:application/pdf},
+}
+@inproceedings{leclair_recommendations,
+	address = {Minneapolis, Minnesota},
+	title = {Recommendations for {Datasets} for {Source} {Code} {Summarization}},
+	url = {https://aclanthology.org/N19-1394},
+	doi = {10.18653/v1/N19-1394},
+	abstract = {Source Code Summarization is the task of writing short, natural language descriptions of source code. The main use for these descriptions is in software documentation e.g. the one-sentence Java method descriptions in JavaDocs. Code summarization is rapidly becoming a popular research problem, but progress is restrained due to a lack of suitable datasets. In addition, a lack of community standards for creating datasets leads to confusing and unreproducible research results – we observe swings in performance of more than 33\% due only to changes in dataset design. In this paper, we make recommendations for these standards from experimental results. We release a dataset based on prior work of over 2.1m pairs of Java methods and one sentence method descriptions from over 28k Java projects. We describe the dataset and point out key differences from natural language data, to guide and support future researchers.},
+	urldate = {2022-02-14},
+	booktitle = {Proceedings of the 2019 {Conference} of the {North} {American} {Chapter} of the {Association} for {Computational} {Linguistics}: {Human} {Language} {Technologies}, {Volume} 1 ({Long} and {Short} {Papers})},
+	publisher = {Association for Computational Linguistics},
+	author = {LeClair, Alexander and McMillan, Collin},
+	month = jun,
+	year = {2019},
+	pages = {3931--3937},
+	file = {Full Text PDF:C\:\\Users\\aalkaswan\\Zotero\\storage\\E284Q76U\\LeClair en McMillan - 2019 - Recommendations for Datasets for Source Code Summa.pdf:application/pdf},
+}
+@inproceedings{recommend_summarization,
+    title = "Recommendations for Datasets for Source Code Summarization",
+    author = "LeClair, Alexander  and
+      McMillan, Collin",
+    booktitle = "Proceedings of the 2019 Conference of the North {A}merican Chapter of the Association for Computational Linguistics: Human Language Technologies, Volume 1 (Long and Short Papers)",
+    month = jun,
+    year = "2019",
+    address = "Minneapolis, Minnesota",
+    publisher = "Association for Computational Linguistics",
+    url = "https://aclanthology.org/N19-1394",
+    doi = "10.18653/v1/N19-1394",
+    pages = "3931--3937",
+    abstract = "Source Code Summarization is the task of writing short, natural language descriptions of source code. The main use for these descriptions is in software documentation e.g. the one-sentence Java method descriptions in JavaDocs. Code summarization is rapidly becoming a popular research problem, but progress is restrained due to a lack of suitable datasets. In addition, a lack of community standards for creating datasets leads to confusing and unreproducible research results {--} we observe swings in performance of more than 33{\%} due only to changes in dataset design. In this paper, we make recommendations for these standards from experimental results. We release a dataset based on prior work of over 2.1m pairs of Java methods and one sentence method descriptions from over 28k Java projects. We describe the dataset and point out key differences from natural language data, to guide and support future researchers.",
+}
+@article{CodeT5,
+  author    = {Yue Wang and
+               Weishi Wang and
+               Shafiq R. Joty and
+               Steven C. H. Hoi},
+  title     = {CodeT5: Identifier-aware Unified Pre-trained Encoder-Decoder Models
+               for Code Understanding and Generation},
+  journal   = {CoRR},
+  volume    = {abs/2109.00859},
+  year      = {2021},
+  url       = {https://arxiv.org/abs/2109.00859},
+  eprinttype = {arXiv},
+  eprint    = {2109.00859},
+  timestamp = {Mon, 20 Sep 2021 16:29:41 +0200},
+  biburl    = {https://dblp.org/rec/journals/corr/abs-2109-00859.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
 }
 
+@misc{CodeBERT,
+  doi = {10.48550/ARXIV.2002.08155},
+  
+  url = {https://arxiv.org/abs/2002.08155},
+  
+  author = {Feng, Zhangyin and Guo, Daya and Tang, Duyu and Duan, Nan and Feng, Xiaocheng and Gong, Ming and Shou, Linjun and Qin, Bing and Liu, Ting and Jiang, Daxin and Zhou, Ming},
+  
+  keywords = {Computation and Language (cs.CL), Programming Languages (cs.PL), FOS: Computer and information sciences, FOS: Computer and information sciences},
+  
+  title = {CodeBERT: A Pre-Trained Model for Programming and Natural Languages},
+  
+  publisher = {arXiv},
+  
+  year = {2020},
+  
+  copyright = {arXiv.org perpetual, non-exclusive license}
+}
+@misc{Transformers,
+  doi = {10.48550/ARXIV.1706.03762},
+  
+  url = {https://arxiv.org/abs/1706.03762},
+  
+  author = {Vaswani, Ashish and Shazeer, Noam and Parmar, Niki and Uszkoreit, Jakob and Jones, Llion and Gomez, Aidan N. and Kaiser, Lukasz and Polosukhin, Illia},
+  
+  keywords = {Computation and Language (cs.CL), Machine Learning (cs.LG), FOS: Computer and information sciences, FOS: Computer and information sciences},
+  
+  title = {Attention Is All You Need},
+  
+  publisher = {arXiv},
+  
+  year = {2017},
+  
+  copyright = {arXiv.org perpetual, non-exclusive license}
+}
+@misc{CodeX,
+  doi = {10.48550/ARXIV.2107.03374},
+  
+  url = {https://arxiv.org/abs/2107.03374},
+  
+  author = {Chen, Mark and Tworek, Jerry and Jun, Heewoo and Yuan, Qiming and Pinto, Henrique Ponde de Oliveira and Kaplan, Jared and Edwards, Harri and Burda, Yuri and Joseph, Nicholas and Brockman, Greg and Ray, Alex and Puri, Raul and Krueger, Gretchen and Petrov, Michael and Khlaaf, Heidy and Sastry, Girish and Mishkin, Pamela and Chan, Brooke and Gray, Scott and Ryder, Nick and Pavlov, Mikhail and Power, Alethea and Kaiser, Lukasz and Bavarian, Mohammad and Winter, Clemens and Tillet, Philippe and Such, Felipe Petroski and Cummings, Dave and Plappert, Matthias and Chantzis, Fotios and Barnes, Elizabeth and Herbert-Voss, Ariel and Guss, William Hebgen and Nichol, Alex and Paino, Alex and Tezak, Nikolas and Tang, Jie and Babuschkin, Igor and Balaji, Suchir and Jain, Shantanu and Saunders, William and Hesse, Christopher and Carr, Andrew N. and Leike, Jan and Achiam, Josh and Misra, Vedant and Morikawa, Evan and Radford, Alec and Knight, Matthew and Brundage, Miles and Murati, Mira and Mayer, Katie and Welinder, Peter and McGrew, Bob and Amodei, Dario and McCandlish, Sam and Sutskever, Ilya and Zaremba, Wojciech},
+  
+  keywords = {Machine Learning (cs.LG), FOS: Computer and information sciences, FOS: Computer and information sciences},
+  
+  title = {Evaluating Large Language Models Trained on Code},
+  
+  publisher = {arXiv},
+  
+  year = {2021},
+  
+  copyright = {arXiv.org perpetual, non-exclusive license}
+}
+
+@inproceedings{Debin,
+  title={Debin: Predicting debug information in stripped binaries},
+  author={He, Jingxuan and Ivanov, Pesho and Tsankov, Petar and Raychev, Veselin and Vechev, Martin},
+  booktitle={Proceedings of the 2018 ACM SIGSAC Conference on Computer and Communications Security},
+  pages={1667--1680},
+  year={2018}
+}
+@inproceedings{Dire,
+  title={DIRE: A neural approach to decompiled identifier naming},
+  author={Lacomis, Jeremy and Yin, Pengcheng and Schwartz, Edward and Allamanis, Miltiadis and Le Goues, Claire and Neubig, Graham and Vasilescu, Bogdan},
+  booktitle={2019 34th IEEE/ACM International Conference on Automated Software Engineering (ASE)},
+  pages={628--639},
+  year={2019},
+  organization={IEEE}
+}
+@article{VarBERT,
+  title={Variable Name Recovery in Decompiled Binary Code using Constrained Masked Language Modeling},
+  author={Banerjee, Pratyay and Pal, Kuntal Kumar and Wang, Fish and Baral, Chitta},
+  journal={arXiv preprint arXiv:2103.12801},
+  year={2021}
+}
+@article{SnowWhite,
+  title={Finding the Dwarf: Recovering Precise Types from WebAssembly Binaries},
+  author={Lehmann, Daniel and Pradel, Michael},
+  year={2022}
+}
+
+@article{Neutron,
+  title={Neutron: an attention-based neural decompiler},
+  author={Liang, Ruigang and Cao, Ying and Hu, Peiwei and Chen, Kai},
+  journal={Cybersecurity},
+  volume={4},
+  number={1},
+  pages={1--13},
+  year={2021},
+  publisher={Springer}
+}
+@inproceedings{StochFuzz,
+  title={StochFuzz: Sound and Cost-effective Fuzzing of Stripped Binaries by Incremental and Stochastic Rewriting},
+  author={Zhang, Zhuo and You, Wei and Tao, Guanhong and Aafer, Yousra and Liu, Xuwei and Zhang, Xiangyu},
+  booktitle={2021 IEEE Symposium on Security and Privacy (SP)},
+  pages={659--676},
+  year={2021},
+  organization={IEEE}
+}
+@inproceedings{ColeOptimizationLevel,
+  title={Cole: compiler optimization level exploration},
+  author={Hoste, Kenneth and Eeckhout, Lieven},
+  booktitle={Proceedings of the 6th annual IEEE/ACM international symposium on Code generation and optimization},
+  pages={165--174},
+  year={2008}
+}
+@article{gccOptimization,
+  title={Optimization in GCC},
+  author={Jones, M Tim},
+  journal={Linux journal},
+  volume={2005},
+  number={131},
+  pages={11},
+  year={2005}
+}
+@article{optimizationObfuscation,
+  title={Measuring the robustness of source program obfuscation},
+  author={Blazy, Sandrine and Riaud, Stephanie},
+  journal={Groupement De Recherche CNRS du G{\'e}nie de la Programmation et du Logiciel},
+  pages={203},
+  year={2014}
+}
+@inproceedings{reverseEngineerProcess,
+  title={An Observational Investigation of Reverse $\{$Engineers’$\}$ Processes},
+  author={Votipka, Daniel and Rabin, Seth and Micinski, Kristopher and Foster, Jeffrey S and Mazurek, Michelle L},
+  booktitle={29th USENIX Security Symposium (USENIX Security 20)},
+  pages={1875--1892},
+  year={2020}
+}

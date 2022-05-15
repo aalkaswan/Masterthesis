@@ -6,6 +6,9 @@
 \usepackage{mscthesis}
 \usepackage{lipsum} % standard filler text, only needed for demo
 
+\usepackage{listings}
+
+
 % %% The package 'algorithm' is useful, but incompatible with memoir.
 % %% Cor-Paul Bezemer / http://homes.esat.kuleuven.be/~dvherten/esatthesis.html
 % %% suggest the following fix:
@@ -15,11 +18,11 @@
 % Include right (LaTeX/PDFLaTeX) graphics package
 % (doesn't work under cygwin apperently)
 %\ifx\pdftexversion\undefined
-\usepackage[dvips]{graphicx}
-\usepackage[dvips]{color}
+% \usepackage[dvips]{graphicx}
+% \usepackage[dvips]{color}
 %\else
-%\usepackage[pdftex]{graphicx}
-%\usepackage[pdftex]{color}
+\usepackage[pdftex]{graphicx}
+\usepackage[pdftex]{color}
 %\fi
 
 \usepackage{hyperref}
@@ -50,23 +53,24 @@
 % or remove the subtitle by uncommenting the following line: 
 %\subtitle{}
 
-\author{Leon Moonen}                               % CHANGE TO YOUR NAME
-\authoremail{\url{Leon.Moonen@computer.org}}       % CHANGE TO YOUR EMAIL ADDRESS
-\birthplace{Weert, the Netherlands}                % CHANGE TO YOUR BIRTH PLACE
-\studentid{123456789}                              % CHANGE TO YOUR STUDENT ID
+\author{Ali Al-Kaswan}                               % CHANGE TO YOUR NAME
+\authoremail{\url{a.al-kaswan@gmail.com}}       % CHANGE TO YOUR EMAIL ADDRESS
+\birthplace{Lelystad, the Netherlands}                % CHANGE TO YOUR BIRTH PLACE
+\studentid{4679678}                              % CHANGE TO YOUR STUDENT ID
 
 % Optional for work done at a company, put this in comments if you did
 % not do your thesis work at a company
 \company{
-\includegraphics[height=2cm]{img/hilbert.ps}\\
-Some Company\\
-With it's address\\
-ThePlace, the Netherlands\\
-\url{www.url.nl}
+\includegraphics[height=1.25cm]{img/ucd.png}\\
+DECAL Lab\\
+Faculty of Computer Science\\
+University of California Davis\\
+Davis, the United States\\
+\url{www.cs.ucdavis.edu}
 }
 
 % Optional (postscript) cover picture. Put this in comments when not needed.
-\coverpicture{\includegraphics[width=13cm]{img/maze.ps}}
+% \coverpicture{\includegraphics[width=13cm]{img/maze.ps}}
 
 
 % A copyright notice and maybe something about the cover picture
@@ -80,12 +84,13 @@ ThePlace, the Netherlands\\
 
 % thesis committee:
 \chair{Prof. Dr. A. van Deursen, Faculty EEMCS, TU Delft}
-\supervisor{Dr. E. Visser, Faculty EEMCS, TU Delft}
+\supervisor{Dr. S. Verwer, Faculty EEMCS, TU Delft}
 % The following two are optional for LaTeX (current university
 % regulations state that at least one of them should be assigned)
-\externalsupervisor{Drs. E.X. Ternal, Some Company}
-\committeemember{Dr. S.T.A.F.F. Member, Faculty EEMCS, TU Delft}
-
+\externalsupervisor{Prof. Dr. P. Devanbu, Faculty Computer Science, UC Davis}
+\committeemembera{Dr. S.T.A.F.F. Member, Faculty EEMCS, TU Delft}
+\committeememberb{Dr. S.T.A.F.F. Member, Faculty EEMCS, TU Delft}
+\committeememberc{Dr. S.T.A.F.F. Member, Faculty EEMCS, TU Delft}
 
 \setcounter{tocdepth}{1}
 \setsecnumdepth{subsection}
@@ -103,10 +108,14 @@ ThePlace, the Netherlands\\
 \cleardoublepage\listoffigures
 \cleardoublepage\mainmatter
 
-\include{introduction} 
-\include{chapter} 
-\include{related_work} 
-\include{conclusions_and_future_work} 
+\include{chapters/01intro}
+\include{chapters/02background}
+\include{chapters/03relatedWork}
+\include{chapters/04methodology}
+\include{chapters/05experimentalSetup}
+\include{chapters/06results}
+\include{chapters/07discussion}
+\include{chapters/08conclusion}
 
 \bibliographystyle{plainnat}
 \bibliography{thesis}

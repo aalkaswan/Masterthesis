@@ -1,0 +1,29 @@
+\chapter{Results}
+\label{results}
+Present the following findings from the experiments:
+
+\begin{itemize}
+    \item RQ1:
+    \begin{itemize}
+        \item From the dataset, we collect relatively few stripped functions compared to the decompiled code
+        \item A pre-trained CodeT5 Model performs well on Source, Decompiled and Demi-stripped code, but relatively poor on stripped code
+        \item The model performance is not correlated with compiler optimization level
+    \end{itemize}
+
+    \item RQ2:
+        \begin{itemize}
+        \item We lose a large number of samples through deduplication
+        \item Duplicates have a relatively large influence on performance, removing them puts the performance of source code and decompiled code in line with normal languages
+        \item Duplicates usually originate from external libraries which are packaged with the binary 
+    \end{itemize}
+    \item RQ3:
+    \begin{itemize}
+        \item The performance on stripped code is significantly lower than the demi-stripped data
+        \item The manual evaluation shows that higher-quality stripped data correlates with a higher score
+    \end{itemize}
+
+    \item RQ4:
+        \begin{itemize}
+        \item Using the DOBF pre-training objective we were able to increase the performance of the model on the stripped data and demi-stripped data, the other objectives did not perform better than the base model
+        \end{itemize}
+\end{itemize}

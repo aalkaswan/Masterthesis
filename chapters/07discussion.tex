@@ -1,0 +1,9 @@
+\chapter{Discussion}
+\label{discussion}
+\begin{itemize}
+    \item The failure to collect many stripped functions is caused by decompilation issues, particularly a failure of Ghidra to align the functions, without the symbol table this is difficult
+    \item Deduplication lowers performance, but for the decompiled and demi-stripped the model is still very much usable. Duplicates are a part of the problem space.
+    \item We find that the loss of identifiers significantly lowers the performance of the model, but stripped code also suffers from decompilation faults, which have a large impact on the model performance
+    \item From the pre-training objectives, the DOBF objective is the one that worked best and the only one that did better than the base model. This is likely because the output is most like NL compared to other objectives, other objectives weaken the decoder by making it predict PL
+    \item From manual observation, we can see that the stripped decompiled code is very weakly decompiled, with few recovered identifiers, we use a relatively strong stripper, which makes the task inherently harder.
+\end{itemize}

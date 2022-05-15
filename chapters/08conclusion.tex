@@ -1,0 +1,37 @@
+\chapter{Conclusion and Future Work}
+\label{conclusion}
+\section{Conclusion}
+Answer the research questions according to the findings
+
+\section{Future Work}
+
+\begin{itemize}
+    \item Exploration of other compiled languages
+    \item Evaluation of different decompilers (Radare/Ida/Hopper)
+    \item Since Ghidra decompiles some functions badly and generally recovers very few additional details, exploration of the application of these methods to disassembled code instead of decompiled code
+    \item Automatic scoring methods to determine the quality of a decompiled sample
+    \item The application of semantic scoring methods to this model
+    \item Exploration of other, weaker strippers
+    \item Developing this model into a Ghidra plugin
+    \item Instead of using base Ghidra, use a different model like DIRE to add identifiers to the stripped code
+\end{itemize}
+\section{Threats to validity}
+\subsection{Internal}
+\begin{itemize}
+    \item Noise, some samples have low-quality comments (Badly written documentation, or incorrectly collected)
+    \item Inductive bias from the pre-trained base model
+    \item A lucky randomly selected test set
+    \item Bias stemming from data collection (only samples that decompile nicely and are commented are represented in the data)
+\end{itemize}
+\subsection{External} 
+\begin{itemize}
+    \item This research only covers unstripped and stripped binaries, some code, particularly malware might use methods to resist analysis
+    \item We use a very bipolar notion of stripping, some binaries might have been stripped with a significantly weaker stripper
+    
+\end{itemize}
+\subsection{Construct}
+\begin{itemize}
+    \item We only cover and explore a single state-of-the-art model, other models might be more successful (mono-operation)
+    \item Documentation that can be derived from code, might not be useful at all (mono-method) (can be argued about code summarization in general)
+\end{itemize}
+

@@ -49,7 +49,9 @@
 \def\chair#1{\gdef\@chair{#1}}
 \def\supervisor#1{\gdef\@supervisor{#1}}
 \def\externalsupervisor#1{\gdef\@externalsupervisor{#1}\external@supervisortrue}
-\def\committeemember#1{\gdef\@committeemember{#1}\committee@membertrue}
+\def\committeemembera#1{\gdef\@committeemember{#1}\committee@membertrue}
+\def\committeememberb#1{\gdef\@committeemember{#1}\committee@membertrue}
+\def\committeememberc#1{\gdef\@committeemember{#1}\committee@membertrue}
 
 \def\subtitle#1{\gdef\@subtitle{#1}}
 \def\authoremail#1{\gdef\@authoremail{#1}}
@@ -182,11 +184,11 @@ Thesis Committee:\\\\
 Chair: & \@chair\\
 University supervisor: & \@supervisor\\
 \ifexternal@supervisor
-Company supervisor: & \@externalsupervisor\\
+External supervisor: & \@externalsupervisor\\
 \fi
-\ifcommittee@member
-Committee Member: & \@committeemember\\
-\fi
+Committee Member: & \@committeemembera\\
+Committee Member: & \@committeememberb\\
+Committee Member: & \@committeememberc\\
 \\\\\\\end{tabular}
 \cleardoublepage\endgroup
 }
