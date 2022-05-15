@@ -3,13 +3,13 @@
 Discuss the different works in the field of binary reverse engineering:
 
 \begin{description}
-    \item[Debin] \textcite{Debin} use a statistical model to predict variable names from stripped assembly. But suffers from poor generalizability and poor performance on other datasets \cite{VarBERT}[p.1]
-    \item[Dire] \textcite{Dire} use an LSTM and A GNN to predict variable names and types from stripped binaries.
-    \item[VarBERT] \textcite{VarBERT} uses a BERT model, pre-trained with a constrained MLM objective, to predict variable names and types
-    \item[Neutron] \textcite{Neutron} apply Machnine Translation to translate from decompiled (not stripped) code back to source code using an LSTM  
-    \item[FUNCRE] \textcite{InlinedFunc} apply pre-training and fine tuning to a RoBERTa model to identify and recover usages of inlined functions in decompiled code
-    \item[SnowWhite] Recently, \textcite{SnowWhite} used a statistical model to predict types from webassembly binaries
-    \item[StochFuzz] Recently, \textcite{StochFuzz} applies the use of fuzzers, to analyse stripped binaries for vulnerabilities, but the fuzzer only finds vulnerable inputs and does not give any insight into the binary itself
+    \item[Debin] Debin use a statistical model to predict variable names from stripped assembly. But suffers from poor generalizability and poor performance on other datasets \cite{VarBERT}[p.1]
+    \item[Dire] Dire use an LSTM and A GNN to predict variable names and types from stripped binaries.
+    \item[VarBERT] VarBERT uses a BERT model, pre-trained with a constrained MLM objective, to predict variable names and types
+    \item[Neutron] Neutron apply Machnine Translation to translate from decompiled (not stripped) code back to source code using an LSTM  
+    \item[FUNCRE] InlinedFunc apply pre-training and fine tuning to a RoBERTa model to identify and recover usages of inlined functions in decompiled code
+    \item[SnowWhite] Recently, SnowWhite used a statistical model to predict types from webassembly binaries
+    \item[StochFuzz] Recently, StochFuzz applies the use of fuzzers, to analyse stripped binaries for vulnerabilities, but the fuzzer only finds vulnerable inputs and does not give any insight into the binary itself
 \end{description}
 
 From these works none focus on the summarization of stripped binaries, they either focus on the recovery of certain aspects lost by stripping or on the translation of unstripped code back to source code.
