@@ -33,21 +33,21 @@ On the flip side, creators of closed source software can use reverse engineering
 Lastly, developers of reverse engineering programs and tool-kits might be able to use the results of this research to enhance their own products. 
 
 \section{Contributions}
-We therefore propose our code summarization model, which takes decompiled functions and synthesizes summaries \ref{img:usecase}. The starting point for a reverse engineer is a binary that has been compiled by a compiler from source code. This binary can then be fed into a reverse engineering tool like Ghidra, which will decompile the binary. From this decompiled code the functions can then be extracted, this is a relatively simple process. These decompiled functions can then be summarized using our trained model.
+We therefore propose our code summarization model, which takes decompiled functions and synthesizes summaries \ref{fig:useCase}. The starting point for a reverse engineer is a binary that has been compiled by a compiler from source code. This binary can then be fed into a reverse engineering tool like Ghidra, which will decompile the binary. From this decompiled code the functions can then be extracted, this is a relatively simple process. These decompiled functions can then be summarized using our trained CodeT5 \cite{CodeT5} model.
 
+\label{fig:useCase}
 \begin{figure}[htb]
     \centering
     \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{img/UseCase.png}
     \caption{Proposed solution}
-    \label{img:useCase}
 \end{figure}
 
 Our main contributions can be summarized as follows:
 \begin{description}
  \item[Model:] Our main contribution is a pre-trained fine-tuned code-summarization model for decompiled and stripped-decompiled code. The model uses CodeT5 and is fine-tuned and evaluated on our own dataset of source code, decompiled code and stripped-decompiled code pairs. 
  \item[Impact study:] To create this model we explored the influence of the input types, the impact of data duplication, the impact of different aspects of stripped code on the model performance.
- \item[Pre-training:] To improve the performance of the model we implemented and evaluated the Masked Language Modeling (MLM), translation, deobfuscation (DOBF) and span-detection (SPAN) pre-training objectives. 
- \item[Dataset:] Finally we contribute the dataset used to fine-tune and pre-train the model. The dataset contains aligned comment-source code, comment-decompiled code, comment-stripped-decompiled code pairs. We also provide a synthetic dataset of comment-demi-stripped code pairs. Furthermore, we provide the data used by the pre-training objectives. This is a novel dataset which can be used by other works to train and evaluate their models.
+ \item[Pre-training:] To improve the performance of the model we implemented and evaluated the Neural Machine Translation (NMT), deobfuscation (DOBF) and span-detection (SPAN) pre-training objectives. 
+ \item[Dataset:] Finally, we contribute the dataset used to fine-tune and pre-train the model. The dataset contains aligned comment-source code, comment-decompiled code, comment-stripped-decompiled code pairs. We also provide a synthetic dataset of comment-demi-stripped code pairs. Furthermore, we provide the data used by the pre-training objectives. This is a novel dataset which can be used by other works to train and evaluate their models.
 \end{description}
 
 \section{Structure}

@@ -99,4 +99,6 @@ Like higher optimization levels, the use of stripping can greatly complicate the
 \subsection{Transformer and CodeT5}
 The current state-of-the-art natural language programming language processing models such as CodeT5 \cite{CodeT5}, CodeBERT \cite{CodeBERT} and CodeX \cite{CodeX} are all based on the Transformer architecture \cite{Transformers}.
 
+Pre-trained language models, such as RoBERTa, CodeBERT \cite{CodeBERT} and CodeT5 \cite{CodeT5} utilize a pre-train and fine-tune paradigm. In this paradigm the models are first trained in an unsupervised manner on a large unlabeled dataset. In the case of RoBERTa, a Masked Language Modeling (MLM) objective was used, where random tokens are masked out from a swath of text (or CodeBERTs case code) and the model is tasked to predict said tokens.
+
 \subsection{Scoring Methods}

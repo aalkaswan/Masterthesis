@@ -11,5 +11,93 @@
     \item Explain what script was used for deduplication
     \item Explain how the model was loaded in and what configurations were used
     \item Explain which metrics we used to assess the model
+    \item Explain the manual evaluation of the stripped code
     \item Explain the baseline of CodeT5 on normal programming languages, and our own finetuning on source-C
 \end{itemize}
+
+\newpage
+
+\section{Research Questions}
+To create and assess our model and contributions, we define the following research questions which will be answered throughout the thesis. 
+
+\begin{itemize}
+    \item RQ1: How do different input types (source, unstripped decompiled, demi-stripped, stripped) affect the model's performance?
+    \begin{sloppypar}
+    Firstly, we want to know how the impact of the data-richness on the model performance. The different datasets that we have different degrees of data richness, the source-code has all of its identifiers and has comments in the code. Unstripped decompiled code has no comments and loses many of its identifiers, some noise is also introduced by the decompiler. Demi-stripped data loses all of the remaining identifiers. Stripped data, also has no identifiers and introduces even more decompilation noise.
+    \end{sloppypar}
+    \item RQ2: What is the impact of data duplication on the model's performance?
+    \begin{sloppypar}
+    Secondly we will evaluate how the model reacts to data duplication, whether the model performance is simply a result of the memorization of certain examples, or if the performance is a result of a generalizable understanding of the data.
+    \end{sloppypar}
+    \item RQ3: To what extent each aspect of stripped decompiled binaries impacts the model's performance?
+    \begin{sloppypar}
+    The different datasets each contain different aspect of the original source code, which of these aspects are most important towards the model performance? 
+    \end{sloppypar}
+    \item RQ4: How do different pre-training objectives affect the model's performance?
+    \begin{sloppypar}
+    Finally, we will apply the insights provided by the previous questions to design new pre-training objectives, through which we aim to address the shortcomings of the base-model. 
+    \end{sloppypar}
+\end{itemize}
+
+\section{Dataset}
+% Technically Buildswarm doesnt do this, how should we report this??
+This dataset contains around 1.8m aligned decompiled-sourcecode pairs as well as 400k aligned stripped-sourcecode pairs. The large difference is caused by the inherent difficulty of finding functions in stripped decompiled code. 
+
+% Selection and extraction of comments
+% 3 types ....
+From this dataset we collect any documentation that is located above the functions using srcML. This documentation can be split into the following classes: %Maybe insert SRCML example to show how we did it....
+\begin{enumerate}
+  \item Double slash comments, example from Jep:release\_utf\_char. 
+\begin{verbatim}
+    // release memory allocated by jstring2char
+\end{verbatim}
+    These comments are thrown out, as these are generally not used for documentation. % Why?
+  \item Single line comments, example from Nesbox:Curl\_mime\_read.
+\begin{verbatim}
+    /* Set mime part remote file name. */
+\end{verbatim}
+   We take the entire comment as a description.
+  \item Multiline comments, example from oftc-ircservices:cs\_on\_client\_join.
+\begin{verbatim}
+    /**
+     * @brief CS Callback when a Client joins a Channel
+     * @param args 
+     * @return pass_callback(self, struct Client *, char *)
+     * When a Client joins a Channel:
+     *  - attach DBChannel * to struct Channel*
+     */
+\end{verbatim}
+    In this case we take the first line or sentence.
+\end{enumerate}
+
+From these descriptions we can then construct a dataset of around 40k stripped-description, and around 480k decompiled-description and C-description pairs. 
+
+\subsection{Deduplication}
+The dataset is deduplicated using a fork\footnote{Near Duplicate Code Detector: https://github.com/SERG-Delft/near-duplicate-code-remover} of the near-duplicate-code-detector \cite{allamanis_adverse}. We use this tool to compare all the functions in the dataset and to find clusters of near-duplicate functions. We randomly select one function per cluster and discard the rest from the dataset. This leaves us with around 190k decompiled-description pairs and 33k stripped-description pairs.
+
+\section{Model Configuration}
+To first establish a performance baseline we trained a CodeT5-base model on the dataset. We trained the base model on the summarization task on the source C, decompiled C, stripped decompiled C and the demi-stripped datasets. We also trained the model on the deduplicated datasets.
+
+%Configurations and versions of packages
+
+%Explain that grid search is infeasible...
+Training was performed using mostly the recommended settings. For the decompiled, stripped, and demi-stripped the source length was doubled to 512 tokens instead of the standard 256 tokens used for the source code. This was done to compensate for the fact that the average length of decompiled and stripped functions was almost double that of the source code.
+
+Training was performed on either an NVIDIA RTX3080 with 10GB of VRAM or an NVIDIA GTX 1080ti with 11GB of VRAM. The authors of CodeT5 used an NVIDIA A100 GPUs with 40G of VRAM for fine-tuning \cite{CodeT5}. To compensate for the lack of memory we reduced the batchsize to 2.
+
+\section{Pre-Training}
+
+\subsection{Translation}
+The first defined task, is a Neural Machine Translation task. In this code-to-code task, the model has to translate the source code from one programming-language to another \cite{CodeXGlue}. In our case we implemented a translation from demi-stripped to unstripped decompiled code. Note that, by construction, the only difference between decompiled and demi-stripped code, is the lack of identifiers in the demi-stripped code.
+
+%Example
+
+\subsection{Deobfuscation}
+The second defined task, is a deobfuscation objective. In this code-to-text objective, the model is tasked with predicting the identifiers in demi-stripped code. Recall, that in the demi-stripped code, all identifiers are masked with meaningless placeholders, where duplicate identifiers are assigned the same placeholder. The model will have to output a map of the placeholders to their original value. While the output of the model is textual and not code, it is not natural language.
+
+%Example
+
+\subsection{Span Detection}
+Finally, we define a Span Detection objective. In this code-to-text objective, the model is tasked with recovering the identifiers from demi-stripped code. Unlike the DOBF objective, every identifier (even matching identifiers) are assigned unique placeholders, the model has to output the assignment of the placeholders in a natural language sentence.
+
+%Example
