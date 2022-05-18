@@ -40,8 +40,7 @@ To create and assess our model and contributions, we define the following resear
 \end{itemize}
 
 \section{Dataset}
-% Technically Buildswarm doesnt do this, how should we report this??
-This dataset contains around 1.8m aligned decompiled-sourcecode pairs as well as 400k aligned stripped-sourcecode pairs. The large difference is caused by the inherent difficulty of finding functions in stripped decompiled code. 
+The Buildswarm dataset contains around 1.8m aligned decompiled-sourcecode pairs as well as 400k aligned stripped-sourcecode pairs. The large difference is caused by the inherent difficulty of finding functions in stripped decompiled code. 
 
 % Selection and extraction of comments
 % 3 types ....
@@ -70,7 +69,11 @@ From this dataset we collect any documentation that is located above the functio
     In this case we take the first line or sentence.
 \end{enumerate}
 
-From these descriptions we can then construct a dataset of around 40k stripped-description, and around 480k decompiled-description and C-description pairs. 
+% From these descriptions we can then construct a dataset of around 40k stripped-description, and around 480k decompiled-description and C-description pairs. 
+
+The data is pre-processed using the Pandas \footnote{Pandas: \url{https://pandas.pydata.org/}} data analysis library as well as the Pandarallel \footnote{Pandarallel: \url{https://pypi.org/project/pandarallel/}} parrallelizability extention for Pandas.
+
+The samples are split into a train, validation and test set. Each set is collected into a single .jsonl \footnote{JSON Lines: \url{https://jsonlines.org/}} file 
 
 \subsection{Deduplication}
 The dataset is deduplicated using a fork\footnote{Near Duplicate Code Detector: https://github.com/SERG-Delft/near-duplicate-code-remover} of the near-duplicate-code-detector \cite{allamanis_adverse}. We use this tool to compare all the functions in the dataset and to find clusters of near-duplicate functions. We randomly select one function per cluster and discard the rest from the dataset. This leaves us with around 190k decompiled-description pairs and 33k stripped-description pairs.
@@ -78,12 +81,56 @@ The dataset is deduplicated using a fork\footnote{Near Duplicate Code Detector: 
 \section{Model Configuration}
 To first establish a performance baseline we trained a CodeT5-base model on the dataset. We trained the base model on the summarization task on the source C, decompiled C, stripped decompiled C and the demi-stripped datasets. We also trained the model on the deduplicated datasets.
 
-%Configurations and versions of packages
+\label{tab:packages}
+\begin{table}[!h]
+\centering
+\begin{tabular}{ll}
+\hline
+Package        & Version     \\ \hline
+Nvidia drivers & 510.60.02   \\
+cuda           & 11.6        \\
+numpy          & 1.22.2      \\
+tensorboard    & 2.8.0       \\
+torch          & 1.9.0+cu111 \\
+transformers   & 4.16.2      \\
+tree-sitter    & 0.20.0      \\ \hline
+\end{tabular}
+\caption{The most important packages and their versions}
+\end{table}
 
-%Explain that grid search is infeasible...
-Training was performed using mostly the recommended settings. For the decompiled, stripped, and demi-stripped the source length was doubled to 512 tokens instead of the standard 256 tokens used for the source code. This was done to compensate for the fact that the average length of decompiled and stripped functions was almost double that of the source code.
+A grid search of the optimal settings was infeasible from a time perspective, so training was performed using mostly the recommended settings. For the decompiled, stripped, and demi-stripped the source length was doubled to 512 tokens instead of the standard 256 tokens used for the source code. This was done to compensate for the fact that the average length of decompiled and stripped functions was almost double that of the source code. Training was performed on either an NVIDIA RTX3080 with 10GB of VRAM or an NVIDIA GTX 1080ti with 11GB of VRAM. The authors of CodeT5 used an NVIDIA A100 GPUs with 40G of VRAM for fine-tuning \cite{CodeT5}. To compensate for the lack of memory we reduced the batchsize to 2, which was the maximum length that still fit both GPUs.
 
-Training was performed on either an NVIDIA RTX3080 with 10GB of VRAM or an NVIDIA GTX 1080ti with 11GB of VRAM. The authors of CodeT5 used an NVIDIA A100 GPUs with 40G of VRAM for fine-tuning \cite{CodeT5}. To compensate for the lack of memory we reduced the batchsize to 2.
+\label{tab:modelSettings}
+\begin{table}[!h]
+\centering
+\begin{tabular}{l|ll}
+\hline
+                & CodeT5-base & Our Settings            \\ \hline
+Source length   & 256 Tokens  & \textbf{256/512 Tokens} \\
+Target length   & 128 Tokens  & 128 Tokens              \\
+Max epochs      & 15          & 15                      \\
+Patience        & 2           & 2                       \\
+Batch Size      & 32          & \textbf{2}              \\
+Vocabulary Size & 32100       & 32100                  
+\end{tabular}
+\caption{Model configuration of the base model and our used settings}
+\end{table}
+
+\label{tab:server}
+\begin{table}[!h]
+\centering
+\begin{tabular}{l|ll}
+\hline
+        & Server 1           & Server 2                     \\ \hline
+CPU     & Intel XEON E5-2620 & AMD Ryzen Threadripper 3990X \\
+Cores   & 16 (32 threads)    & 64 (128 threads)             \\
+RAM     & 192GB              & 128GB                        \\
+GPU     & Nvidia GTX 1080TI  & Nvidia RTX 3080              \\
+VRAM    & 11GB               & 10GB                         \\
+Storage & 7.3TB HDD          & 1TB NVME SSD                
+\end{tabular}
+\caption{Hardware used for training and evaluation}
+\end{table}
 
 \section{Pre-Training}
 
