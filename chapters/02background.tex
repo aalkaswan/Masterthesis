@@ -1,22 +1,23 @@
 \chapter{Background}
 \label{background}
-Explain relevant concepts needed to understand the experiments and findings:\\
+% Explain relevant concepts needed to understand the experiments and findings:
 
-Binary Reverse Engineering:
-\begin{itemize}
-    \item Compilers and compiler levels
-    \item Stripping
-    \item Ghidra
-\end{itemize}
+% Binary Reverse Engineering:
+% \begin{itemize}
+%     \item Compilers and compiler levels
+%     \item Stripping
+%     \item Ghidra
+% \end{itemize}
 
-NLP for code:
-\begin{itemize}
-\item Code Summarization
-\item Transformers and CodeT5
-\item Scoring methods
-\end{itemize}
+% NLP for code:
+% \begin{itemize}
+% \item Code Summarization
+% \item Transformers and CodeT5
+% \item Scoring methods
+% \end{itemize}
 
-\newpage
+% \newpage
+In this chapter we will cover the required background knowledge to understand this thesis and to discuss the relevant works. We will start by covering different aspects of binary reverse engineering. Firstly, compilers and compiler optimization levels will be covered, then stripping will be explained. Finally, we will discuss the Ghidra toolkit and the relevant modules. The second part of this chapter will feature an explanation on Natural Language Processing methods for code. We will start by explaining the code summarization task, we will then move on to explain transformers and CodeT5. Finally, the BLEU evaluation metric will be explained in detail.
 \section{Binary Reverse Engineering}
 
 \subsection{Compilers and Optimization Levels}
@@ -28,36 +29,6 @@ For example, the gcc features 60 optimizations across 8 different optimization l
 
 Optimizations can restructure and transform the program in relation to the source code, by changing the control flow or the data of the program \cite{optimizationObfuscation}. This obfuscation can complicate the reverse engineering process by reducing the accuracy of Ghidra \cite{optimizationObfuscation}.  
 
-\subsection{Ghidra}
-Ghidra is a free and open source reverse engineering toolkit developed by the US National Security Agency. Ghidra has been in development since the turn of the century and had been in use internally. Its existence was leaked by Wikileaks in March of 2017 and the tool was released to the public in March of 2019, before being open sourced in April of the same year.
-
-Ghidra contains many separate analysis modules that allow a reverse engineer to analyse compiled code. The modularity of Ghidra and the inclusion of a scripting engine allow users to add custom modules and scripts. We will specifically focus on the tools used in the process that was used to transform binaries into readable code (see \ref{fig:ghidra}).
-
-\label{fig:ghidra}
-\begin{figure}[!h]
-  \centering
-  \includegraphics[width=\linewidth]{img/ghidra.png}
-  \caption{Transformation of binary to readable code.}
-\end{figure}
-
-Ghidra features a disassembler \ref{fig:disassembler}, which will take the binaries and assemble them back into an intermediate representation. In the case of x86-x64 binaries like the binaries this project will focus on, this intermediate representation will be assembly. Processors have an associated language that defines the mapping
-between user readable assembly language instructions (e.g. MOV, ADD, etc.) and their corresponding byte values. In order to properly disassemble a binary image for a specific architecture, Ghidra requires a language module for that specific processor. A language module is the software that implements the language translation. Ghidra has a set of language modules for the most popular processor languages(such as x86-64, ARM. MIPS ..). Besides these out-of-the-box supported architectures, developers have also been extending Ghidra's support with custom processor architectures. 
-\label{fig:disassembler}
-\begin{figure}[!h]
-  \centering
-  \includegraphics[width=\linewidth]{img/disassembler.png}
-  \caption{Ghidra's disassembly window.}
-\end{figure}
-
-The decompiler, also featured in Ghidra \ref{fig:decompiler}, is a processor language-agnostic transformation engine that takes the disassembled code and creates a source code representation. The representation is in pseudo-C, a C-like representation that generally follows the general language conventions of C. The interactive decompiler window allows the user to directly see the correspondence between the pseudo-C and assembly representation. The user can also make changes to the decompiled code, such as changing automatically generated variable names and types and adding comments. 
-
-\label{fig:decompiler}
-\begin{figure}[!h]
-  \centering
-  \includegraphics[width=\linewidth]{img/decompiler.png}
-  \caption{Ghidra's decompiler window showing a snippet of decompiled function from the secp256k1 ECDSA library}
-\end{figure}
-\newpage
 \subsection{Stripping}
 Aside from compiling with higher optimization levels, binaries can also be stripped to obfuscate the underlying code and to resist analysis\cite{StochFuzz}. Binaries which have not been stripped still contain a lot of debug information, which can be used during development. This debug information, like function names, self defined types etc., can be used to analyse and reverse engineer the binary. Commercial Off-the-Shelf (COTS) software is often stripped to reduce the memory and storage footprint of binary, and to resist analysis to protect the intellectual property of the creator. Many vulnerable and malicious binaries are, unfortunately, also stripped to resist security analysis and hide their faults\cite{Debin}.
 
@@ -92,13 +63,144 @@ The strip utility as implemented in GNU/Linux, removes the symbol table from the
 % FIX THIS, footnote doesnt work
 
 Like higher optimization levels, the use of stripping can greatly complicate the efforts to reverse engineer a binary, as well as reduce the accuracy and effectiveness of reverse engineering tools. 
+\newpage
+\subsection{Ghidra}
+Ghidra is a free and open source reverse engineering toolkit developed by the US National Security Agency. Ghidra has been in development since the turn of the century and had been in use internally. Its existence was leaked by Wikileaks in March of 2017 and the tool was released to the public in March of 2019, before being open sourced in April of the same year.
+
+Ghidra contains many separate analysis modules that allow a reverse engineer to analyse compiled code. The modularity of Ghidra and the inclusion of a scripting engine allow users to add custom modules and scripts. We will specifically focus on the tools used in the process that was used to transform binaries into readable code (see \ref{fig:ghidra}).
+
+\label{fig:ghidra}
+\begin{figure}[!h]
+  \centering
+  \includegraphics[width=\linewidth]{img/ghidra.png}
+  \caption{Transformation of binary to readable code.}
+\end{figure}
+
+Ghidra features a disassembler \ref{fig:disassembler}, which will take the binaries and assemble them back into an intermediate representation. In the case of x86-x64 binaries like the binaries this project will focus on, this intermediate representation will be assembly. Processors have an associated language that defines the mapping
+between user readable assembly language instructions (e.g. MOV, ADD, etc.) and their corresponding byte values. In order to properly disassemble a binary image for a specific architecture, Ghidra requires a language module for that specific processor. A language module is the software that implements the language translation. Ghidra has a set of language modules for the most popular processor languages(such as x86-64, ARM. MIPS ..). Besides these out-of-the-box supported architectures, developers have also been extending Ghidra's support with custom processor architectures. 
+\label{fig:disassembler}
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\linewidth]{img/disassembler.png}
+  \caption{Ghidra's disassembly window.}
+\end{figure}
+
+The decompiler, also featured in Ghidra \ref{fig:decompiler}, is a processor language-agnostic transformation engine that takes the disassembled code and creates a source code representation. The representation is in pseudo-C, a C-like representation that generally follows the general language conventions of C. The interactive decompiler window allows the user to directly see the correspondence between the pseudo-C and assembly representation. The user can also make changes to the decompiled code, such as changing automatically generated variable names and types and adding comments. 
+
+\label{fig:decompiler}
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\linewidth]{img/decompiler.png}
+  \caption{Ghidra's decompiler window showing a snippet of decompiled function from the secp256k1 ECDSA library}
+\end{figure}
+
+\newpage
 \section{NLP for Code}
 
 \subsection{Code Summarization}
+Code summarization (also refered to as Source code summarization) is the task of writing short descriptions from source code, usually a single sentence summary of the source code. The main use is for software documentation, like the one-sentence JavaDoc description used in Java\cite{leclair_recommendations}. This documentation is important for program comprehension and for maintenance. But the process of writing and maintaining these descriptions is a labor-intensive and time-consuming task, which is where the need to automate that process arises. Code summarization is an extremely active and popular research problem in the field of Software Engineering \cite{leclair_recommendations}.
 
-\subsection{Transformer and CodeT5}
-The current state-of-the-art natural language programming language processing models such as CodeT5 \cite{CodeT5}, CodeBERT \cite{CodeBERT} and CodeX \cite{CodeX} are all based on the Transformer architecture \cite{Transformers}.
+While code summarization can be applied to any particular piece of code, the problem is usually posed as a the generation of a description on function or method level. The limitation of these methods is that the model is not provided with any background knowledge.
 
-Pre-trained language models, such as RoBERTa, CodeBERT \cite{CodeBERT} and CodeT5 \cite{CodeT5} utilize a pre-train and fine-tune paradigm. In this paradigm the models are first trained in an unsupervised manner on a large unlabeled dataset. In the case of RoBERTa, a Masked Language Modeling (MLM) objective was used, where random tokens are masked out from a swath of text (or CodeBERTs case code) and the model is tasked to predict said tokens.
+\subsection{Transformers and CodeT5}
+The in this thesis the CodeT5 model, which is based on Transfromers, is extensively used. This section provides a quick overview on the Transformer architecture and the CodeT5 model.
+
+\subsubsection{Transformers}
+The current state-of-the-art NLP models for programming languages such as CodeT5 \cite{CodeT5}, CodeBERT \cite{CodeBERT} and CodeX \cite{CodeX} are all based on the Transformer architecture \cite{Transformers}.
+
+Transformers were originally proposed by \citeauthor{Transformers} as a novel sequence-to-sequence (seq2seq) architecture. Unlike the recurrent neural networks (RNN), the Long Short-Term memory (LSTM) variant of RNNs and convolutional neural networks (CNN), Transformers only use a mechanism called self-attention to capture dependencies between the input and output. 
+
+\todo[inline]{make this image smaller, or use higher-resolution image here}
+\label{fig:transformers}
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\linewidth]{img/transformers.png}
+  \caption{Model overview of Transformer \cite{Transformers}}
+\end{figure}
+
+Transformers use an encoder-decoder architecture, where the encoder maps a sequence of input representations \(x = (x_1,x_2 ... x_n)\) to a continuous intermediate representations \(z = (z_1,z_2 ... z_n)\). From this intermediate representation the decoder creates an output \(y = (y_1,y_2 ... y_m)\).
+
+The encoder is comprised of N layers. The input tokens are transformed into an embedding, to every embedded token a positional encoding is added. This positional encoding adds information about the position of every token in the sequence. RNNs receive an \(O(n)\) time penalty for sequential operations on sequences of length \(n\), while sequential operations in Transformers are \(O(1)\) in respect to the length \(n\) of the sequence.
+
+The input is then processed by the self-attention function, which maps a query, and a set of key-value pairs to an output \(Attention(Q,(K,V))\). Intuitively, the query vector \(q\) can be described as the input token, and the mapping finds the most similar key vector \(k\) and outputs the value. This is done by taking the dot product of \(q\) and \(k\), normalizing by dividing by the dimension \(k\) and taking the softmax function. This normalization is important to limit the dot-product values to ensure that the softmax function still retains a good gradient flow. The resulting value \(softmax(\frac{QK^T}{\sqrt{d_k}})\) is maximum when the vectors \(q\) and \(k\) are most similar. Finally this can be multiplied with the value \(v\) to get the value paired with the most similar value \[Attention(Q,(K,V)) = softmax(\frac{QK^T}{\sqrt{d_k}}V)\]
+This attention function is applied h times and concatted, and is called the Multi-Head attention layer, where in every attention head different learned weight matrices \(W_i\) are also applied. 
+\[MultiHead(Q,K,V) = Concat(head_1, head_2 ... head_h) W^O\]
+\[ head_i = Attention(QW^Q_i,KW^K_i,VW^V_i)\] This output is then fed into a Feed Forward Neural Network and normalized. This single encoder layer, can be stacked N times. This entire process can be parallelized to pass the entire input sequence at once through the encoder. 
+
+The decoder is similarly structured as the encoder. Firstly the target sequence is shifted to the right, such that the model has to predict the next target token. The target sequence is also embedded and the positional encoding is added. The first Multi-Head attention block has a masking applied, such that the attention of tokens further in the target sequence are not taken into account while predicting the attention of the current token. Recall that, during training, the model can use the entire input sequence, but only the previous target sequences to predict a token. The mask is a simple upper-triangular matrix, where the upper triangle is set to \(-\infty\) and the lower triangle to \(0\), such that: \[Attention(Q,(K,V)) = softmax(mask + \frac{QK^T}{\sqrt{d_k}}V)\]
+This ensures that, during training, the self-attention blocks can still be computed in parallel, without having to resort to sequentially sampling the target.
+The next attention block in the decoder, implements cross-attention, where the key and value \(K, V\) vectors are fed in from the encoder, and the query \(Q\) vectors are fed in from the previous decoder block. This allows every token in the decoder to attend to all tokens in the encoder, which is important to allow the output to condition to the input. Similarly to the encoder, the final block of the decoder is a feed forward neural network. The decoder is also stacked N times, the output of these layers in fed into a Linear Feed Forward Neural Network, which transforms the embedding into a vector of probabilities for every token in the vocabulary of the model. Then the Softmax is applied to the output of the network and the highest probability token is selected as the output. During training the model is tuned to maximise the probability of predicting the correct output token given the input to the encoder.
+
+Transformers offer a variety of advantages over RNNs and CNNs:
+\begin{description}
+    \item[Parallelizability] Transformers can process the entire input sequence in parallel. This allows them to leverage the high number of processing cores in conventional GPU architectures, which makes them much faster to train and deploy.
+    \item[Long Memory] The Self-Attention paradigm allows the model to establish and remember dependencies along the entire length of the input sequence, the length of the input does not restrict the dependencies. Furthermore, because the model is not recursive in nature and the self-attention vector is calculated for the entire input, the memory gradient does not vanish as with CNNs.
+    \item[Interpretability and Explainability] Unlike the black box nature of RNNs and CNNs, the Self-Attention gradient of the multi-head attention layers can be visualized to show the dependencies between different tokens of the input and output.
+\end{description}
+
+\subsubsection{Transfer Learning}
+Pre-trained Transformers-based language models, such as RoBERTa, CodeBERT \cite{CodeBERT} and CodeT5 \cite{CodeT5} utilize a pre-train and fine-tune paradigm. In this paradigm the models are first trained in an unsupervised manner on a large unlabeled dataset. In the case of RoBERTa, a Masked Language Modeling (MLM) objective was used, where random tokens are masked out from a swath of text (or code in CodeBERTs case) and the model is tasked to predict said tokens. These pre-trained models can then be fine-tuned to perform a more specialized task, such as summarization. This concept is called transfer learning (TL). 
+TL uses knowledge that is obtained in one task to solve a different task. It allows the creation of general models that are trained once on massive (usually unlabeled) datasets. These general models, which contain general domain knowledge can then be trained for a specific down-stream task. In general, this approach is quicker and requires less training data than training a model on the down-stream task from scratch\cite{BERT}.
+
+\subsubsection{CodeT5}
+CodeT5 is a SOTA pre-trained programming language model built on the T5 (Text-to-text Transfer Transformer) architecture proposed by \citeauthor{CodeT5} and pre-trained on a mix of unsupervised and supervised tasks. CodeT5 employs an encoder-decoder architecture, other state of the art models only feature an encoder (BERT) or a decoder (GPT).
+In contrast to other models, CodeT5 is trained using both unimodal (PL only) and bimodal (NL to PL) tasks on six programming languages. This bimodal training allows CodeT5 to have strong performance in both uni-modal (PL-to-PL) tasks such as code translation and code refinement, as well as cross-modal tasks such as code summarization and code generation (PL-to-NL).
 
 \subsection{Scoring Methods}
+To evaluate the quality of the source code summaries an evaluation metric is required, which quantifies the quality of a produced candidate summary compared to a reference. The simplest metric is an exact match score, where the score is 1 if the candidate matches the reference exactly. This metric does not reflect the actual quality of the produced summary.
+
+\subsubsection{BLEU}
+The most widely used metric is Bilingual Evaluation Understudy Score (BLEU) \cite{evaluationSummarization}. BLEU was originally proposed as a technique to evaluate the machine translations against a set of human translations. In the code-summarization domain, the automatically generated summaries are compared against a programmer defined summary. 
+BLEU produces a percentage number between 0 and 100, which defines the similarity between a candidate and a set of reference sentences. BLEU-N calculates the cumulative N-gram precision scores, the number of matching N-grams divided by the total number of N-grams in the candidate sentence. The unigrams (1-grams) account for the adequacy of the candidate while the longer N-grams account for the fluency. 
+Two problems arise, firstly the score can be artificially inflated by simply repeating the same matching N-gram multiple times in the candidate \ref{tab:BLEUIssues}. Secondly, the score can also be inflated by creating a very short candidate such that the denominator is very small \ref{tab:BLEUIssues}.
+
+\label{tab:BLEUIssues}
+\begin{table}[H]
+\begin{tabular}{l|lllllll|l}
+\rowcolor[HTML]{C0C0C0} 
+Reference & Calculate & the & Secp256k1 & private & key & given & generator & Precision \\ \hline
+Repeating & the       & the & the       & the     & the & the   &           & 6/6 = 1   \\
+Short     & Calculate &     &           &         &     &       &           & 1/1 = 1  
+\end{tabular}
+\caption{An example of a repeating and short candidate, and the resulting 1-gram precision.}
+\end{table}
+
+To counteract these two issues, BLEU firstly clips the n-grams in the numerator, such that each match is only counted once. Secondly a Brevity Penalty (BP) is applied such that short candidate is penalized. Recall that long candidates are already inherently penalized by the precision metric. Let \(c\) be the length of the candidate and \(r\) be the length of the reference, BP is then defined as:
+
+\begin{equation}
+  BP=\begin{cases}
+    1, & \text{if $c<r$}.\\
+    e^{(1 - r/c)}, & \text{otherwise}.
+  \end{cases}
+\end{equation}
+The geometric mean of each of the clipped n-gram precision scores \(p_n\) is taken:
+\[ \text{BLEU-N} = BP \cdot exp(\sum_{n=1}^{N} w_n log p_n ) \]
+Where \(w_n\) is a uniform weight \(w_n = 1/N\).
+
+While \(N\) could be any number, BLEU-4 is the most commonly used variant. Since code summaries are generally quite short and the BLEU score was originally designed for use in longer corpora of text it can occur that there are no matching 4-grams between a candidate and reference summary\cite{evaluationSummarization}. The geometric mean will then result to 0, and the BLEU score will also be 0. To solve this, smoothing is applied. There exist a variety of smoothing methods, which all add a factor to the numerator and denominator of \(p_n\) \cite{evaluationSummarization}.
+
+\label{tab:BLEUScale}
+\begin{table}[H]
+\begin{tabular}{l|l}
+\hline
+\rowcolor[HTML]{E8EAED} 
+\multicolumn{1}{|l|}{\cellcolor[HTML]{E8EAED}{\color[HTML]{202124} \textbf{BLEU Score}}} & \multicolumn{1}{l|}{\cellcolor[HTML]{E8EAED}{\color[HTML]{202124} Interpretation}} \\ \hline
+\rowcolor[HTML]{FFFFFF} 
+{\color[HTML]{202124} \textless 10}                                                      & {\color[HTML]{202124} Almost useless}                                              \\
+\rowcolor[HTML]{FFFFFF} 
+{\color[HTML]{202124} 10 - 19}                                                           & {\color[HTML]{202124} Hard to get the gist}                                        \\
+\rowcolor[HTML]{FFFFFF} 
+{\color[HTML]{202124} 20 - 29}                                                           & {\color[HTML]{202124} The gist is clear, but has significant grammatical errors}   \\
+\rowcolor[HTML]{FFFFFF} 
+{\color[HTML]{202124} 30 - 40}                                                           & {\color[HTML]{202124} Understandable to good translations}                         \\
+\rowcolor[HTML]{FFFFFF} 
+{\color[HTML]{202124} 40 - 50}                                                           & {\color[HTML]{202124} High quality translations}                                   \\
+\rowcolor[HTML]{FFFFFF} 
+{\color[HTML]{202124} 50 - 60}                                                           & {\color[HTML]{202124} Very high quality, adequate, and fluent translations}        \\
+\rowcolor[HTML]{FFFFFF} 
+{\color[HTML]{202124} \textgreater 60}                                                   & {\color[HTML]{202124} Quality often better than human}
+\end{tabular}
+\caption{Interpretation of BLEU scores \cite{evaluationSummarization}}
+\end{table}
+
+A major weakness of the BLEU metric is the fact that it does not consider the meaning of the reference and candidate texts, synonyms and syntactically different texts have a low score despite their adequacy. For example, a reference of "Calculate the Secp256k1 private key given the generator" and a candidate of "Secp256k1 secret key calculation from G" will score very lowly, despite the fact that they both convey the same information. 

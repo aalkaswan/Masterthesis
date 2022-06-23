@@ -1,13 +1,20 @@
 \chapter{Methodology}
 \label{methodology}
-\begin{itemize}
-    \item Explain the data collection step, and how the comments were collected and aligned using BinSwarm. 
-    \item Explain the deduplication methods used and why duplicates in this task are fine, but why we choose to report the deduplicated results anyway.
-    \item Explain the experimental setup for the standard model, how we pre-processed the data, fed it into the model and the evaluation 
-    \item Explain the experimental setup for the pre-training, the translation, DOBF and span detection, how and why the pre-training steps were done, and how they were evaluated
-\end{itemize}
-\newpage
-%Add intro to section
+\todo[inline]{This can be renamed to approach}
+
+% \begin{itemize}
+%     \item Explain the data collection step, and how the comments were collected and aligned using BinSwarm. 
+%     \item Explain the deduplication methods used and why duplicates in this task are fine, but why we choose to report the deduplicated results anyway.
+%     \item Explain the experimental setup for the standard model, how we pre-processed the data, fed it into the model and the evaluation 
+%     \item Explain the experimental setup for the pre-training, the translation, DOBF and span detection, how and why the pre-training steps were done, and how they were evaluated
+% \end{itemize}
+% \newpage
+In this chapter the methodology of our solution is discussed in detail. More specifically, we start with a discussion on data collection step, how the data was aligned and prepared. Followed by a discussion on the intermediate-training set-up. Finally the fine tuning of the model will be covered.
+
+\todo[inline]{first provide an overview of the proposed approach in 1-2 paragraphs, then layout the structure of chapter and finally go into more details}
+
+\todo[inline]{you can include a running example to walk the reader through your approach, it makes it much easier to understand the work}
+
 \section{Data Collection}
 To create and assess our solution we require a dataset of decompiled functions labeled with a description. This dataset should be relatively large to suit the "data-hungry" deep-learning models that we utilize. Furthermore the dataset needs to feature a diverse set of data, representative of the actual real-life usecase of our solution. 
 To create a large and diverse dataset to train and assess our solution we made use of BinSwarm \cite{InlinedFunc}, an existing dataset of aligned decompiled and stripped decompiled functions \footnote{BinSwarm; \url{https://hub.docker.com/r/binswarm/cbuilds}}.
@@ -41,21 +48,21 @@ Besides exact duplicates, near-duplicates can also occur. Near-duplicates are li
 The issue with code duplication in classical code summarization is that the models and tools are supposed to be used to generate summaries for new and unseen code. The evaluation metrics should therefore measure the generalization of the tool on new samples \cite{allamanis_adverse}. Duplicates and near-duplicates are not defined as new samples, a user of such a tool could simply look these samples up. Furthermore, large, high-capacity models like CodeT5 with 220 million or Codex 12 billion \cite{CodeX} trainable weights \cite{CodeT5}, have a large capacity to memorize duplicated code \cite{allamanis_adverse}.
 The usecase outlined in this work, is however, more akin to deobfuscation. As explained by Allamanis, deobfuscation could be a usecase where duplicates are valid and part of the true distribution of the problem\cite{allamanis_adverse}. Compiled code contains a lot of duplicate code, and understanding this code is still difficult and of importance towards the understanding of the binary. We will therefore focus on the performance of the model on code with duplicates, but we will also report the deduplicated results.
 
-\section{Fine-Tuning}
-The concept of transfer learning, which is utilized in CodeT5 depends on the use of a fine-tuning step to train the pre-trained model on the downstream task. In this case we make use of the CodeT5-base model which was trained on the mixed upstream tasks by the authors \cite{CodeT5}.
+\section{Intermediate-Training}
+The standard CodeT5 model was not pre-trained on any decompiled code, it might therefore be useful to apply additional training steps to 'teach' the model the embedding of decompiled and stripped decompiled code. Since we apply these training steps between the pre-training and fine-tuning of the model, we refer to this training strategy as intermediate-training.
 
-We fine-tune a pre-trained CodeT5-base model on the constructed dataset. The model is trained on the summarization task as defined in the model. The model is trained on the train set, then evaluated after every epoch on the validation set and finally tested on the test set. The performance of the model is measured using the EM (exact match), BLEU-4 scores.
-
-\section{Pre-Training}
-The standard CodeT5 model was not pre-trained on any decompiled code, it might therefore be useful to apply additional pre-training steps to 'teach' the model the embedding of decompiled and stripped decompiled code. These additional pre-training steps are also called intermediate training steps in other literature \cite{intermediateTraining}.
-
-To apply and assess other pre-training objectives we train a CodeT5-base model on a predefined objective, then after that pre-training step, we fine-tune the resulting model on our fine tuning datasets. We essentially apply another pre-training step to the already pre-trained base model. We can then measure the impact of the pre-training step on the performance of the model after fine-tuning.
+To apply and assess other intermediate-training objectives we train a CodeT5-base model on a predefined objective, then after that intermediate-training step, we fine-tune the resulting model on our fine-tuning datasets. We essentially apply another training step to the already pre-trained base model. We can then measure the impact of the intermediate-training step on the performance of the model after fine-tuning.
 
 \label{fig:preTraining}
-\begin{figure}[!h]
+\begin{figure}[H]
   \centering
   \includegraphics[width=\linewidth]{img/pre-training.png}
   \caption{Pre-Training}
 \end{figure}
 
 We define and a number of different pre-training objectives. Each of these objectives aims to teach the model the embedding of the identifiers, such that these identifiers can be inferred on the stripped code. For these objectives we make use of the relatively large dataset of demi-stripped code, to prevent leakage we remove the test set of the stripped code from the dataset.
+
+\section{Fine-Tuning}
+The concept of transfer learning, which is utilized in CodeT5 depends on the use of a fine-tuning step to train the pre-trained model on the downstream task. In this case we make use of the CodeT5-base model which was trained on the mixed upstream tasks by the authors \cite{CodeT5}.
+
+We fine-tune a pre-trained CodeT5-base model on the constructed dataset. The model is trained on the summarization task as defined in the model. The model is trained on the train set, then evaluated after every epoch on the validation set and finally tested on the test set. The performance of the model is measured using the EM (exact match), BLEU-4 scores.

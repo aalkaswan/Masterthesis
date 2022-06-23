@@ -1,4 +1,4 @@
-\documentclass[twoside,a4paper,11pt]{memoir}
+\documentclass[twoside,a4paper,12pt]{memoir}
 \usepackage{a4}
 \usepackage{times}
 \usepackage{pslatex}
@@ -8,7 +8,10 @@
 
 \usepackage{listings}
 
-% \usepackage[]{todonotes}
+\usepackage{amsmath}
+\usepackage[table,xcdraw]{xcolor}
+\usepackage{tablefootnote}
+
 
 % %% The package 'algorithm' is useful, but incompatible with memoir.
 % %% Cor-Paul Bezemer / http://homes.esat.kuleuven.be/~dvherten/esatthesis.html
@@ -23,13 +26,16 @@
 % \usepackage[dvips]{color}
 %\else
 \usepackage[pdftex]{graphicx}
-\usepackage[pdftex]{color}
+% \usepackage[pdftex]{color}
 %\fi
 
 \usepackage{hyperref}
 
 % Used in the bibliography to enable \citeauthor{citation}
 \usepackage[numbers]{natbib}
+
+% added by Mali
+\usepackage{todonotes}
 
 % Ensure that urls longer than the page width are broken up
 % Based on the answer of StackOverflow user "xamde":
@@ -124,7 +130,7 @@ Davis, the United States\\
 \appendix
 \def\chaptername{Appendix}
 \include{appendix}
-\include{requirements}
+% \include{requirements}
 
 
 \end{document}

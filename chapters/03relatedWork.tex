@@ -1,15 +1,42 @@
 \chapter{Related Work}
 \label{relatedWork}
+
+\todo[inline]{I see this is currently a draft. when you start working on this, try to identify the main themes in the related work (to solve the problem) and then categorize different approaches based on that. 
+make sure to state what is the difference between the related work and your proposed approach. and finally, you can also provide a nice table for comparing the most relevant/dominant studies in the literature. based on that you discuss the open challenges and gaps that have not been address, which you aim to address in this work.} 
+
 Discuss the different works in the field of binary reverse engineering:
 
-\begin{description}
-    \item[Debin] Debin use a statistical model to predict variable names from stripped assembly. But suffers from poor generalizability and poor performance on other datasets \cite{VarBERT}[p.1]
-    \item[Dire] Dire use an LSTM and A GNN to predict variable names and types from stripped binaries.
-    \item[VarBERT] VarBERT uses a BERT model, pre-trained with a constrained MLM objective, to predict variable names and types
-    \item[Neutron] Neutron apply Machnine Translation to translate from decompiled (not stripped) code back to source code using an LSTM  
-    \item[FUNCRE] InlinedFunc apply pre-training and fine tuning to a RoBERTa model to identify and recover usages of inlined functions in decompiled code
-    \item[SnowWhite] Recently, SnowWhite used a statistical model to predict types from webassembly binaries
-    \item[StochFuzz] Recently, StochFuzz applies the use of fuzzers, to analyse stripped binaries for vulnerabilities, but the fuzzer only finds vulnerable inputs and does not give any insight into the binary itself
-\end{description}
+% \begin{description}
+%     \item[Debin] Debin use a statistical model to predict variable names from stripped assembly. But suffers from poor generalizability and poor performance on other datasets \cite{VarBERT}[p.1]
+%     \item[Dire] Dire use an LSTM and A GNN to predict variable names and types from stripped binaries.
+%     \item[VarBERT] VarBERT uses a BERT model, pre-trained with a constrained MLM objective, to predict variable names and types
+%     \item[Neutron] Neutron apply Machnine Translation to translate from decompiled (not stripped) code back to source code using an LSTM  
+%     \item[FUNCRE] InlinedFunc apply pre-training and fine tuning to a RoBERTa model to identify and recover usages of inlined functions in decompiled code
+%     \item[SnowWhite] Recently, SnowWhite used a statistical model to predict types from webassembly binaries
+%     \item[StochFuzz] Recently, StochFuzz applies the use of fuzzers, to analyse stripped binaries for vulnerabilities, but the fuzzer only finds vulnerable inputs and does not give any insight into the binary itself
+% \end{description}
 
-From these works none focus on the summarization of stripped binaries, they either focus on the recovery of certain aspects lost by stripping or on the translation of unstripped code back to source code.
+\section{Recovering Identifiers from Stripped Binaries}
+\textbf{Debin} \cite{Debin} aims to recover debug info from stripped binaries. The authors use a tree based classification model to determine which registers in the IR are useful to predict and map to an actual variable, as opposed to constant values and intermediate values which have no mapping to source code variables. A probabilistic graph based model is built and all the variable names and types are jointly recovered using a Maximum a Posterior probability inference. The authors show SOTA performance in the recovery of both names and types. Notably, the authors claim no noticeable performance penalty between different optimization levels \footnote{Debin Presentation at CCS' 18: \url{https://youtu.be/x1x_KtS-5Hs?t=1551}}. 
+
+Unlike previous works \textbf{VarBERT} uses a Transformer-based NLP model for the task of variable name recovery. The authors pre-trained a BERT model with a standard Masked Language Modeling (MLM) objective. This same model is then fine tuned to predict the names and types from unstripped binaries using a constrained Masked Language Modeling objective. The authors show SOTA performance in the recovery of names and types. Furthermore, the authors of VarBERT have shown that the performance of Debin does not generalize well to other datasets \cite{VarBERT}[p.1]. 
+
+\section{Inlined Functions Recovery in Stripped binaries}
+\textbf{FUNCRE} uses a pre-trained and fine-tuned ROBERTA model to predict usages of inlined library functions. Recall that compilers with optimizations enabled can inline functions in the binary \ref{background}, identifying library function calls is key to understanding the behavior of the binary. The authors use indelible markers, which do not get destroyed by compiler optimizations, to mark usages of library functions. The model is pre-trained with a MLM objective on the stripped decompiled code. and then fine-tuned to detect and name inlined function usages in a given context window. The authors combine the model with the included function recovery functionality included in Ghidra and greatly improved the F1-score to the point that Ghidra outperformed Hex-Ray's IDA-pro which performs significantly better than Ghidra at inlined function recovery. 
+
+\section{Binary Translation}
+\textbf{Neutron} \cite{Neutron} frames decompilation as a neural machine translation problem, and utilizes an LSTM based neural translation network to translate disassembled binaries back to C source code. The binaries are not stripped and do not have any optimizations enabled. To handle long-term information, the LSTM also includes an attention mechanism. The authors first remove the identifiers before translation, the identifiers are aligned with the translated identifier-less source code. The translations created by Neutron can contain syntax errors, so the authors apply regular expressions to create a tailor-made syntax checker. Neutron achieves high accuracy on the translation task, but only on unstripped and non-optimized code.
+
+From these works none focus on the summarization of stripped binaries, they either focus on the recovery of certain aspects lost by stripping or on the translation of unstripped code back to source code. 
+\begin{table}[]
+\begin{tabular}{llllll}
+\rowcolor[HTML]{C0C0C0} 
+Work     & Task                            & Approach                                           & Source                         & Level             & Limitations               \\
+Debin    & Variable name and type recovery & Extremely Randomized Trees and MAP graph inference & Stripped binary                & Binary level      & Poor generalizability     \\
+VarBERT  & Variable name and type recovery & Pre-trained and fine-tuned BERT model              & Stripped binary                & Function level    &                           \\
+FUNCRE   & Inlined function recovery       & Pre-trained and fine-tuned RoBERTa model           & Stripped binary                & Function level    &                           \\
+Neutron  & Neural Translation              & Attention-LSTM                                     & Unstripped binary              & Instruction level & No compiler optimizations \\ \hline
+Our work & Code summarization              & Intermediate-trained and fine-tuned CodeT5 model   & Stripped and unstripped binary & Function level    &                          
+\end{tabular}
+\end{table}
+
