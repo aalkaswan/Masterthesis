@@ -9,22 +9,21 @@
 %     \item Explain the experimental setup for the pre-training, the translation, DOBF and span detection, how and why the pre-training steps were done, and how they were evaluated
 % \end{itemize}
 % \newpage
+The proposed solution starts with a data collection step, where we collect open-source projects. These open-source projects are then compiled, decompiled and then the decompiled functions are aligned with the documentation extracted from the source code. This data is then processed to extract descriptive comments and split into multiple sets. We use this data to fine-tune and evaluate a pre-trained CodeT5 model. We also design a few intermediate-training objectives which are applied to the model before fine-tuning to improve the model performance. 
+
 In this chapter the methodology of our solution is discussed in detail. More specifically, we start with a discussion on data collection step, how the data was aligned and prepared. Followed by a discussion on the intermediate-training set-up. Finally the fine tuning of the model will be covered.
-
-\todo[inline]{first provide an overview of the proposed approach in 1-2 paragraphs, then layout the structure of chapter and finally go into more details}
-
 \todo[inline]{you can include a running example to walk the reader through your approach, it makes it much easier to understand the work}
 
 \section{Data Collection}
 To create and assess our solution we require a dataset of decompiled functions labeled with a description. This dataset should be relatively large to suit the "data-hungry" deep-learning models that we utilize. Furthermore the dataset needs to feature a diverse set of data, representative of the actual real-life usecase of our solution. 
-To create a large and diverse dataset to train and assess our solution we made use of BinSwarm \cite{InlinedFunc}, an existing dataset of aligned decompiled and stripped decompiled functions \footnote{BinSwarm; \url{https://hub.docker.com/r/binswarm/cbuilds}}.
+To create a large and diverse dataset to train and assess our solution we made use of BinSwarm \cite{InlinedFunc}, an existing dataset of aligned decompiled and stripped decompiled functions. \footnote{BinSwarm; \url{https://hub.docker.com/r/binswarm/cbuilds}}
 
 Buildswarm starts by collecting C-based projects from Github. The projects are filtered to only include projects that are: Actively being developed, using Travis CI and built for Ubuntu Linux. The projects are then built using Docker. The resulting binaries are then stripped and both the stripped and unstripped binaries are decompiled using Ghidra, the functions are extracted from the decompiled code and aligned with the source code. 
 
 To add descriptive comments to this dataset, we extract documentation from the original source code. We depend on the documentation that was included in the source code by the original authors in the form of single and multiline comments. The decompiled functions are alligned with the comments in the source code by using srcML to extract any documentation located directly before a function signature, and then finding the function signature and project name in the decompiled dataset.
 
-The documentation of a function often also contains other details aside from the descriptive summary. We found that C projects do not follow a single documentation standard. Javadoc for Java has a short one line description or summary for each method at the beginning of the multiline comment. In C there is no singular documentation standard so there might not be a single line summary and we will need t automatically locate it in the comment block. 
-Furthermore, we found that a large number of function did not have any documentation associated with them. To deal with these issues we did not include any functions that are missing any documentation. To find the single line description we devised a few simple rules to extract the summary.
+The documentation of a function often also contains other details aside from the descriptive summary. We found that C projects do not follow a single documentation standard. Javadoc for Java has a short one line description or summary for each method at the beginning of the multiline comment. In C there is no singular documentation standard so there might not be a single line summary and we will need to automatically locate it in the comment block. 
+Furthermore, we found that a large number of function did not have any documentation associated with them. To deal with these issues we did not include any functions that are missing any documentation. To find the single sentence description we devised a few simple rules to extract the summary.
 
 A high level overview of this process can be found in figure \ref{fig:dataCollection}.
 

@@ -100,7 +100,9 @@ The decompiler, also featured in Ghidra \ref{fig:decompiler}, is a processor lan
 \subsection{Code Summarization}
 Code summarization (also refered to as Source code summarization) is the task of writing short descriptions from source code, usually a single sentence summary of the source code. The main use is for software documentation, like the one-sentence JavaDoc description used in Java\cite{leclair_recommendations}. This documentation is important for program comprehension and for maintenance. But the process of writing and maintaining these descriptions is a labor-intensive and time-consuming task, which is where the need to automate that process arises. Code summarization is an extremely active and popular research problem in the field of Software Engineering \cite{leclair_recommendations}.
 
-While code summarization can be applied to any particular piece of code, the problem is usually posed as a the generation of a description on function or method level. The limitation of these methods is that the model is not provided with any background knowledge.
+While code summarization can be applied to any particular piece of code, the problem is usually posed as a the generation of a description on function or method level. A major limitation of these methods is that the model is not provided with any background knowledge. 
+
+A twist on the code summarization task is proposed by \citeauthor{ExtremeSummarization}. Extreme summarization is defined similarly to the code summarization task, but instead of an entire sentence, the model is tasked with summarizing the function in the form of a single descriptive function name.
 
 \subsection{Transformers and CodeT5}
 The in this thesis the CodeT5 model, which is based on Transfromers, is extensively used. This section provides a quick overview on the Transformer architecture and the CodeT5 model.
@@ -110,11 +112,10 @@ The current state-of-the-art NLP models for programming languages such as CodeT5
 
 Transformers were originally proposed by \citeauthor{Transformers} as a novel sequence-to-sequence (seq2seq) architecture. Unlike the recurrent neural networks (RNN), the Long Short-Term memory (LSTM) variant of RNNs and convolutional neural networks (CNN), Transformers only use a mechanism called self-attention to capture dependencies between the input and output. 
 
-\todo[inline]{make this image smaller, or use higher-resolution image here}
 \label{fig:transformers}
 \begin{figure}[H]
   \centering
-  \includegraphics[width=\linewidth]{img/transformers.png}
+  \includegraphics[width=\linewidth]{img/transformer.png}
   \caption{Model overview of Transformer \cite{Transformers}}
 \end{figure}
 
