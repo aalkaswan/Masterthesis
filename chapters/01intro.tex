@@ -10,7 +10,7 @@
 % \newpage
 
 \section{Problem Definition and Significance}
-Reverse Engineering (RE) the inner workings of binary executables is required analyse and understand programs. Furthermore, it can be used to find vulnerabilities and to analyse novel malware. Unlike binaries, the source code is relatively easy to read. The source code of the binaries is, however, not always available. The original code gets compiled into a runnable binary program by compilers such as Clang/LLVM \footnote{Clang: https://clang.llvm.org/} or GCC \footnote{GCC: https://gcc.gnu.org/} and delivered to the user.
+Reverse Engineering (RE) the inner workings of binary executables is required to analyse and understand programs. Furthermore, it can be used to find vulnerabilities and to analyse novel malware. Unlike binaries, the source code is relatively easy to read. The source code of the binaries is, however, not always available. The original source code gets compiled into a runnable binary program by compilers such as Clang/LLVM \footnote{Clang: https://clang.llvm.org/} or GCC \footnote{GCC: https://gcc.gnu.org/} and delivered to the user.
 
 To understand what a binary program does exactly, the binary code can be decompiled into readable code by decompilers such as Ghidra\footnote{Ghidra Framework: url{https://ghidra-sre.org/}} and IDA Pro\footnote{IDA Pro: url{https://hex-rays.com/ida-pro/}}. Understanding decompiled code is still intrinsically difficult process. It is a manual, time-consuming process and still largely depends on the skill of the Reverse Engineer\cite{TypeInferenceSurvey}.
 
@@ -29,6 +29,11 @@ There are several stakeholders who might benefit from this research.
     \item On the flip side, creators of closed source software can use reverse engineering to determine whether other software has copied their products and infringed on their intellectual property.
     \item Lastly, developers of reverse engineering programs and tool-kits might be able to use the results of this research to enhance their own products. 
 \end{enumerate}
+
+\section{Goal}
+Below follows the goal for this master thesis:\\
+
+\centerline{\textbf{The automatic summarization of decompiled code into short natural language utterances.}}
 
 \section{Contributions}
 We therefore propose our code summarization model, which takes decompiled functions and synthesizes summaries \ref{fig:useCase}. The starting point for a reverse engineer is a binary that has been compiled by a compiler from source code. This binary is then processed by a reverse engineering tool like Ghidra, which decompiles the binary. From this decompiled code the functions are then extracted, this is a relatively simple process. These decompiled functions are then summarized using our trained CodeT5 \cite{CodeT5} model.

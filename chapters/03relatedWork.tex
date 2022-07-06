@@ -1,11 +1,5 @@
 \chapter{Related Work}
 \label{relatedWork}
-
-\todo[inline]{I see this is currently a draft. when you start working on this, try to identify the main themes in the related work (to solve the problem) and then categorize different approaches based on that. 
-make sure to state what is the difference between the related work and your proposed approach. and finally, you can also provide a nice table for comparing the most relevant/dominant studies in the literature. based on that you discuss the open challenges and gaps that have not been address, which you aim to address in this work.} 
-
-Discuss the different works in the field of binary reverse engineering:
-
 % \begin{description}
 %     \item[Debin] Debin use a statistical model to predict variable names from stripped assembly. But suffers from poor generalizability and poor performance on other datasets \cite{VarBERT}[p.1]
 %     \item[Dire] Dire use an LSTM and A GNN to predict variable names and types from stripped binaries.
@@ -15,13 +9,14 @@ Discuss the different works in the field of binary reverse engineering:
 %     \item[SnowWhite] Recently, SnowWhite used a statistical model to predict types from webassembly binaries
 %     \item[StochFuzz] Recently, StochFuzz applies the use of fuzzers, to analyse stripped binaries for vulnerabilities, but the fuzzer only finds vulnerable inputs and does not give any insight into the binary itself
 % \end{description}
+In this section we relate our own work to other works in the field. Binary reverse engineering and the use of NLP for software engineering are very large and active fields so we select an discuss a few distinct works in different areas.
 
 \section{Recovering Identifiers from Stripped Binaries}
 \textbf{Debin} \cite{Debin} aims to recover debug info from stripped binaries. The authors use a tree based classification model to determine which registers in the IR are useful to predict and map to an actual variable, as opposed to constant values and intermediate values which have no mapping to source code variables. A probabilistic graph based model is built and all the variable names and types are jointly recovered using a Maximum a Posterior probability inference. The authors show SOTA performance in the recovery of both names and types. Notably, the authors claim no noticeable performance penalty between different optimization levels. \footnote{Debin Presentation at CCS' 18: \url{https://youtu.be/x1x_KtS-5Hs?t=1551}} 
 
-Unlike previous works \textbf{VarBERT} uses a Transformer-based NLP model for the task of variable name recovery. The authors pre-trained a BERT model with a standard Masked Language Modeling (MLM) objective. This same model is then fine tuned to predict the names and types from unstripped binaries using a constrained Masked Language Modeling objective. The authors show SOTA performance in the recovery of names and types. Furthermore, the authors of VarBERT have shown that the performance of Debin does not generalize well to other datasets \cite{VarBERT}[p.1]. 
+Unlike previous works \textbf{VarBERT} \cite{VarBERT} uses a Transformer-based NLP model for the task of variable name recovery. The authors pre-trained a BERT model with a standard Masked Language Modeling (MLM) objective. This same model is then fine tuned to predict the names and types from unstripped binaries using a constrained Masked Language Modeling objective. The authors show SOTA performance in the recovery of names and types. Furthermore, the authors of VarBERT have shown that the performance of Debin does not generalize well to other datasets \cite{VarBERT}[p.1]. 
 
-\section{Inlined Functions Recovery in Stripped binaries}
+\section{Inlined Function Recovery in Stripped binaries}
 \textbf{FUNCRE} uses a pre-trained and fine-tuned ROBERTA model to predict usages of inlined library functions. Recall that compilers with optimizations enabled can inline functions in the binary \ref{background}, identifying library function calls is key to understanding the behavior of the binary. The authors use indelible markers, which do not get destroyed by compiler optimizations, to mark usages of library functions. The model is pre-trained with a MLM objective on the stripped decompiled code. and then fine-tuned to detect and name inlined function usages in a given context window. The authors combine the model with the included function recovery functionality included in Ghidra and greatly improved the F1-score to the point that Ghidra outperformed Hex-Ray's IDA-pro which performs significantly better than Ghidra at inlined function recovery. 
 
 \section{Binary Translation}
@@ -32,8 +27,6 @@ Unlike previous works \textbf{VarBERT} uses a Transformer-based NLP model for th
 
 \citeauthor{PolyglotCodeBERT} use the CodeXGLUE dataset to train their model. The multilingual aspect is achieved by mixing the samples from different programming languages in the training set such that the model is trained on all languages simultaneously. The single multilingual model is then tested on the test set of the different programming languages in the CodeXGLUE dataset. Using this approach the authors were able to report the highest scoring model on the CodeXGLUE \cite{CodeXGlue} \footnote{CodeXGLUE benchmark: \url{https://microsoft.github.io/CodeXGLUE/}} Code Summarization benchmark. PolyglotCodeBERT reported an average BLEU4 score of 20.06 over all the programming languages, with the greatest improvements reported in Ruby and JavaScript, the languages with the fewest samples in CodeXGLUE. Recently, DistillCodeT5 reported an even higher score than PolyglotCodeBERT. Unfortunately as of the writing of this work, DistillCodeT5 is not yet published, and we were unable to find any details about the implementation.
 
-\todo[inline]{Add one more from source code domain}
-\todo[inline]{Figure out how to fit this table..}
 \begin{table}[!h]
 \begin{sideways}
 \begin{tabulary}{1.5\textwidth}{lLLLLL}
@@ -50,4 +43,5 @@ Our work & Code summarization              & Intermediate-trained and fine-tuned
 \end{sideways}
 \end{table}
 
-From these works none focus on the summarization of stripped binaries, they either focus on the recovery of certain aspects lost by stripping or on the translation of unstripped code back to source code. 
+\subsection{Our Work}
+None of these works focus on the summarization of stripped binaries. Neutron \cite{Neutron} proposes a NMT solution but does not take compiler optimizations into account. Debin \cite{Debin} and VarBERT recover variable/function names and types. PolyglotCodeBERT proposes a SOTA code summarization method but only focused on source code. Our proposed code summarization model will therefore be applied to decompiled and stripped decompiled code, with compiler optimizations enabled.

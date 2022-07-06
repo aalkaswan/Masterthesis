@@ -8,7 +8,6 @@
 %     \item From manual observation, we can see that the stripped decompiled code is very weakly decompiled, with few recovered identifiers, we use a relatively strong stripper, which makes the task inherently harder.
 % \end{itemize}
 % \newpage
-\todo[inline]{Discuss performance}
 In this chapter we will provide an analysis and reflection on the results of the experiments. Furthermore, we will discuss the threats to validity and the implications of this work.
 
 We found a relatively large difference between the number of recovered decompiled and stripped decompiled functions. This can likely be attributed to the fact that Ghidra struggles a lot more with recovering stripped functions. Recall that the symbol-table commonly contains information regarding the location and name of functions. When this table is dropped, the start- and endpoints of functions are hard to infer by automatic tools, especially since many functions get inlined and \(CALL\) instructions are replaced by \(JUMP\) instructions. Asides from difficulties in demarcating functions, it is also difficult to align the associated source code function with the decompiled function. With unstripped code, the function name remains, which means that the functions can simply be aligned using the name. We attempted to utilize an existing solution by \citeauthor{FunctionBoundaryDetection} called Jima \cite{FunctionBoundaryDetection} to find function boundaries. Jima is the current SOTA tool for function boundary detection in stripped binaries. The tool is implemented as a plugin for Ghidra, but in our experiments we found no statistical difference between the base performance of Ghidra and Jima on our own dataset.
@@ -17,7 +16,7 @@ The model produced many instances where the output was grammatically correct and
 
 Duplicates seem to have a relatively large impact on performance. Removing duplicates from the dataset, puts the performance of the model more into line with other deduplicated datasets such as the CodeXGlue dataset used for CodeT5. The removal of duplicates has a larger impact on decompiled code than on source code. As noted previously, duplicates are part of the problem space, we therefore consider them in the other experiments.
 
-We find a relatively small difference in performance between source code and decompiled code. This indicates that in-function-comments and variable names are relatively unimportant for the model performance. \citeauthor{PolyglotCodeBERT} observed that identifiers might be more important than syntax in the code-summarization task, we can further conclude that the function name specifically is extremely important for model performance. Only removing the function name from the decompiled samples, as opposed to removing all identifiers in demi-stripping, results in only marginally higher performance than demi-stripped code. Which indicates a very high dependence on the name of the function in the code-summarization task. 
+We find a relatively small difference in performance between source code and decompiled code. This indicates that in-function-comments and variable names are relatively unimportant for the model performance. \citeauthor{PolyglotCodeBERT} observed that identifiers might be more important than syntax in the code-summarization task, we can further conclude that the function name specifically is extremely important for model performance. Only removing the function name from the decompiled samples, as opposed to removing all identifiers in demi-stripping, results in only slightly higher performance than demi-stripped code. Which indicates a very high dependence on the name of the function in the code-summarization task. 
 
 The prediction of function names from the function body is an already defined task, called "extreme summarization", discussed in Chapter \ref{background}. While extreme summarization could help in the recovery of function names for stripped functions, which can aid understanding, it has a limited applicability to unstripped code, which still retains its function names. In Appendix \ref{app:ExtremeSum} we report on a few experiments on this task. We found that similar to the regular summarization task, the model struggles with stripped code due to compiler issues, which is why we decided to not pursue this avenue any further. 
 
@@ -26,7 +25,7 @@ Stripped code performed significantly worse than the demi-stripped code, even in
 Our choice of stripper might also influence the performance of the model. We find that our stripped code does not benefit from Ghidra's decompiler as much as other examples. For example, the decompiled stripped binaries used by \citeauthor{Nero} contain much more details compared to our samples. The sample shown in figure \ref{fig:Nero} is a binary compiled using gcc and optimization level zero.
 
 \label{fig:Nero}
-\begin{figure}[H]
+\begin{figure}[!h]
   \centering
   \includegraphics[width=\linewidth]{img/Nero.png}
   \caption{Short decompiled function from the GNU Debugger \cite{Nero} decompiled by Ghidra}
@@ -63,7 +62,12 @@ This section will cover the threats to validity. These threats are split in 3 ca
 
 
 \section{Broader Impacts}
-\todo[inline]{Add some paragraphs discussing the impact of our work}
+This thesis proposes a novel solution which can aid reverse engineers in their work. Among other uses, this solution could help malware analysts in quickly understanding novel malware and its weaknesses. Software can be analysed to find possible vulnerabilities and malicious payloads. The source code can be reconstructed for old binaries for which the source code is lost. Finally, it could help in the process of patching binary programs, known as micropatching.
+
+The proposed solution applies a well known and well studied task from the software engineering research field to the binary reverse engineering domain. We have proposed a model for one of the many different applications of NLP to code. Other existing and extensively studied applications, like defect detection and code repair, could also be applied to decompiled code. 
+
+While the proposed solution has some limitations, especially in stripped code, we hope that our work inspires other researchers further improve our models or to propose their own solutions. For this, and in the spirit of open science, we have also published our research data. Other researchers can improve our models by designing their own pre-training objectives and applying them to an already trained model. Furthermore, researchers could also use the provided datasets to train and evaluate their own models.
+
 
 
 \section{Ethical Considerations}
@@ -90,5 +94,4 @@ from doing anything that would cause it to segfault irl?
 Training these models requires a non-negligible amount of computational resources. We attempted to carefully design our experiments to limit the number of GPU hours. We also selected pre-trained model which allows us to skip the expensive pre-training step. Compared to other state of the art LLMs, CodeT5 is a relatively small model with only 220M parameters compared to CodeX which has 12B parameters \cite{CodeX}. Furthermore, we release our trained models, such that repeated training by the community can be avoided.
 
 \subsection{Malicious Use}
-As with much research in the field of binary reverse engineering, this work could be used for malicious purposes. Malicious practitioners could use this work to RE binaries and extract protected intellectual property. Furthermore, this work could be used to analyse binaries for faults and vulnerabilities, such that they can be developed into exploits for use by malicious actors.
-\todo[inline]{Maybe add a statement from the authors against misuse here}
+As with much research in the field of binary reverse engineering, this work could be used for malicious purposes. Malicious practitioners could use this work to RE binaries and extract protected intellectual property. Furthermore, this work could be used to analyse binaries for faults and vulnerabilities, such that they can be developed into exploits for use by malicious actors. Any reverse engineer aided by the methods proposed in this work should carefully consider the legal and ethical aspects of their effort \footnote{Electronic Frontier Foundation: \url{https://www.eff.org/issues/coders/reverse-engineering-faq}}. Furthermore, any and all vulnerabilities discovered with the help of these methods should be disclosed responsibly to the owner without needlessly putting the security of users at risk. 

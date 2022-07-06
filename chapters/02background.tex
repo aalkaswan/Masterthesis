@@ -17,7 +17,7 @@
 % \end{itemize}
 
 % \newpage
-In this chapter we will cover the required background knowledge to understand this thesis and to discuss the relevant works. We will start by covering different aspects of binary reverse engineering. Firstly, compilers and compiler optimization levels will be covered, then stripping will be explained. Finally, we will discuss the Ghidra toolkit and the relevant modules. The second part of this chapter will feature an explanation on Natural Language Processing methods for code. We will start by explaining the code summarization task, we will then move on to explain transformers and CodeT5. Finally, the BLEU evaluation metric will be explained in detail.
+In this chapter we will cover the required background knowledge to understand this thesis and to discuss the relevant works. We will start by covering different aspects of binary reverse engineering. Firstly, compilers and compiler optimization levels will be covered, then stripping will be explained. Finally, we will discuss the Ghidra toolkit and the relevant modules. The second part of this chapter will feature an explanation on Natural Language Processing methods for code. We will start by explaining the code summarization task, we will then move on to explain transformers and CodeT5. Finally, the BLEU, METEOR and ROUGE evaluation metrics will be explained in detail.
 \section{Binary Reverse Engineering}
 
 \subsection{Compilers and Optimization Levels}
@@ -119,7 +119,7 @@ Transformers were originally proposed by \citeauthor{Transformers} as a novel se
   \caption{Model overview of Transformer \cite{Transformers}}
 \end{figure}
 
-Transformers use an encoder-decoder architecture, where the encoder maps a sequence of input representations \(x = (x_1,x_2 ... x_n)\) to a continuous intermediate representations \(z = (z_1,z_2 ... z_n)\). From this intermediate representation the decoder creates an output \(y = (y_1,y_2 ... y_m)\).
+Transformers use an encoder-decoder architecture, where the encoder maps a sequence of input representations \(x = (x_1,x_2 ... x_n)\) to a continuous intermediate representation \(z = (z_1,z_2 ... z_n)\). From this intermediate representation the decoder creates an output \(y = (y_1,y_2 ... y_m)\).
 
 The encoder is comprised of N layers. The input tokens are transformed into an embedding, to every embedded token a positional encoding is added. This positional encoding adds information about the position of every token in the sequence. RNNs receive an \(O(n)\) time penalty for sequential operations on sequences of length \(n\), while sequential operations in Transformers are \(O(1)\) in respect to the length \(n\) of the sequence.
 
@@ -151,7 +151,7 @@ In contrast to other models, CodeT5 is trained using both unimodal (PL only) and
 To evaluate the quality of the source code summaries an evaluation metric is required, which quantifies the quality of a produced candidate summary compared to a reference. The simplest metric is an exact match score, where the score is 1 if the candidate matches the reference exactly. This metric does not reflect the actual quality of the produced summary.
 
 \subsubsection{BLEU}
-The most widely used metric is Bilingual Evaluation Understudy Score (BLEU) \cite{evaluationSummarization}. BLEU was originally proposed as a technique to evaluate the machine translations against a set of human translations. In the code-summarization domain, the automatically generated summaries are compared against a programmer defined summary. 
+The most widely used metric in the Code Summarization task is Bilingual Evaluation Understudy Score (BLEU) \cite{evaluationSummarization}. BLEU was originally proposed as a technique to evaluate the machine translations against a set of human translations. In the code-summarization domain, the automatically generated summaries are compared against a programmer defined summary. 
 BLEU produces a percentage number between 0 and 100, which defines the similarity between a candidate and a set of reference sentences. BLEU-N calculates the cumulative N-gram precision scores, the number of matching N-grams divided by the total number of N-grams in the candidate sentence. The unigrams (1-grams) account for the adequacy of the candidate while the longer N-grams account for the fluency. 
 Two problems arise, firstly the score can be artificially inflated by simply repeating the same matching N-gram multiple times in the candidate \ref{tab:BLEUIssues}. Secondly, the score can also be inflated by creating a very short candidate such that the denominator is very small \ref{tab:BLEUIssues}.
 
@@ -205,3 +205,40 @@ While \(N\) could be any number, BLEU-4 is the most commonly used variant. Since
 \end{table}
 
 A major weakness of the BLEU metric is the fact that it does not consider the meaning of the reference and candidate texts, synonyms and syntactically different texts have a low score despite their adequacy. For example, a reference of "Calculate the Secp256k1 private key given the generator" and a candidate of "Secp256k1 secret key calculation from G" will score very lowly, despite the fact that they both convey the same information. 
+
+\subsubsection{METEOR}
+METEOR (Metric for Evaluation for Translation with Explicit Ordering) \cite{Meteor} is also a metric proposed to assess a machine generated translation against multiple human generated references. Unlike BLEU which is a precision based metric, METEOR is more recall focused. METEOR has a higher correlation with human judgement than BLEU \cite{recommend_summarization}, it uses wordlists and stemming to also take synonyms into account. On the flip-side the stemming and synonyms are language-dependent, and somewhat more expensive than BLEU to calculate.
+
+The METEOR score is calculated by first generating an alignment between a the candidate and reference sentence. An alignment is a mapping between each unigram (or word) in the candidate and reference sentences. The unigrams can be matched in 3 ways: Firstly the unigrams can be an \textit{exact} match. The unigrams can also be matched on the \textit{stem}, which will match words on their stem. For example the words 'improved' and 'improving' will both be reduced to their stem 'quick' and will then be matched. Finally, words can also be matched if they are synonyms, for instance 'quick' and 'fast'. This is determined using the WordNet database. The alignment which best preserves the word ordering is selected. 
+
+A fragmentation penalty (p) is also introduced to account for congruity. The minimum number of adjacent matched groups (or chunks) of words in the candidate and reference. The penalty \(Pen\) is calculated as a function of the number of chunks \(ch\), the number of matches \(m\) hyperparameters \(\gamma, \beta\).
+
+\begin{equation}
+\begin{aligned}
+frag = \frac{ch}{m} \\
+Pen = \gamma * frag^{\beta}
+\end{aligned}
+\end{equation}
+
+The selected alignment is then scored using a harmonic mean:
+
+\begin{equation}
+  \begin{aligned}
+P = \frac{m}{t} \\
+R = \frac{m}{r} \\
+F_{mean} = \frac{P*R}{\alpha * P * (1 - \alpha) * R} \\
+Score = (1 - Pen) * F_{mean}
+\end{aligned}
+\end{equation}
+
+\subsubsection{ROUGE-L}
+ROUGE or Recall-Oriented Understudy for Gisting Evaluation, is a package which includes a number of metrics, the most popular among them is ROUGE-L \cite{Rouge}. As the name implies, it is more recall oriented than BLEU. Unlike BLEU and METEOR, the ROUGE measures were constructed to score automatically generated candidate summaries against a one or multiple reference summaries. ROUGE-L is much quicker than METEOR to calculate and is language-independent.
+
+ROUGE-L simply finds the longest common subsequence (LCS) between the reference and the candidate, note that the words do not need to be consecutive but they have to be in order. The length of the LCS \(lcs\), the length of the reference \(r\), the length of the candidate \(c\), and a large constant \(\beta \rightarrow \infty\) are then used to calculate the score:
+\begin{equation}
+  \begin{aligned}
+P = \frac{lcs}{c} \\
+R = \frac{lcs}{r} \\
+ROUGE-L= \frac{(1+\beta^2)*R*P}{R+ \beta^2 * P} \\
+\end{aligned}
+\end{equation}

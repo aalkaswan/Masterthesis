@@ -1,6 +1,5 @@
-\chapter{Methodology}
+\chapter{Approach}
 \label{methodology}
-\todo[inline]{This can be renamed to approach}
 
 % \begin{itemize}
 %     \item Explain the data collection step, and how the comments were collected and aligned using BinSwarm. 
@@ -44,8 +43,8 @@ Large corpora of code, like the corpus gathered by BinSwarm, tend to have a high
 
 Besides exact duplicates, near-duplicates can also occur. Near-duplicates are like exact duplicates but they differ in a few small aspects like different code comments or different function names. While removing exact duplicates is relatively fast and straightforward, removing near-duplicates is a much harder and computationally intensive \cite{allamanis_adverse}. 
 
-The issue with code duplication in classical code summarization is that the models and tools are supposed to be used to generate summaries for new and unseen code. The evaluation metrics should therefore measure the generalization of the tool on new samples \cite{allamanis_adverse}. Duplicates and near-duplicates are not defined as new samples, a user of such a tool could simply look these samples up. Furthermore, large, high-capacity models like CodeT5 with 220 million or Codex 12 billion \cite{CodeX} trainable weights \cite{CodeT5}, have a large capacity to memorize duplicated code \cite{allamanis_adverse}.
-The usecase outlined in this work, is however, more akin to deobfuscation. As explained by Allamanis, deobfuscation could be a usecase where duplicates are valid and part of the true distribution of the problem\cite{allamanis_adverse}. Compiled code contains a lot of duplicate code, and understanding this code is still difficult and of importance towards the understanding of the binary. We will therefore focus on the performance of the model on code with duplicates, but we will also report the deduplicated results.
+The issue with code duplication in classical code summarization is that the models and tools are supposed to be used to generate summaries for new and unseen code. The evaluation metrics should therefore measure the generalization of the tool on new samples \cite{allamanis_adverse}. Duplicates and near-duplicates are not defined as new samples, a user of such a tool could simply look these samples up. Furthermore, large, high-capacity models like CodeT5 with 220 million \cite{CodeT5} or Codex 12 billion \cite{CodeX} trainable weights, have a large capacity to memorize duplicated code \cite{allamanis_adverse}.
+The usecase outlined in this work, is however, more akin to deobfuscation. As explained by \citeauthor{allamanis_adverse}, deobfuscation could be a usecase where duplicates are valid and part of the true distribution of the problem\cite{allamanis_adverse}. Compiled code contains a lot of duplicate code, and understanding this code is still difficult and of importance towards the understanding of the binary. We will therefore focus on the performance of the model on code with duplicates, but we will also report the deduplicated results.
 
 \section{Intermediate-Training}
 The standard CodeT5 model was not pre-trained on any decompiled code, it might therefore be useful to apply additional training steps to 'teach' the model the embedding of decompiled and stripped decompiled code. Since we apply these training steps between the pre-training and fine-tuning of the model, we refer to this training strategy as intermediate-training.
@@ -59,9 +58,9 @@ To apply and assess other intermediate-training objectives we train a CodeT5-bas
   \caption{Pre-Training}
 \end{figure}
 
-We define and a number of different pre-training objectives. Each of these objectives aims to teach the model the embedding of the identifiers, such that these identifiers can be inferred on the stripped code. For these objectives we make use of the relatively large dataset of demi-stripped code, to prevent leakage we remove the test set of the stripped code from the dataset.
+We define and a number of different pre-training objectives. Each of these objectives aims to teach the model the embedding of the identifiers, such that these identifiers can be inferred on the stripped code. For these objectives we make use of the relatively large dataset of demi-stripped code. Some samples might be included in both the fine-tuning data as well as the intermediate-training data, but the model objective will differ. To prevent leakage we remove the test set of the fine-tuning data from the intermediate-training data. 
 
 \section{Fine-Tuning}
 The concept of transfer learning, which is utilized in CodeT5 depends on the use of a fine-tuning step to train the pre-trained model on the downstream task. In this case we make use of the CodeT5-base model which was trained on the mixed upstream tasks by the authors \cite{CodeT5}.
 
-We fine-tune a pre-trained CodeT5-base model on the constructed dataset. The model is trained on the summarization task as defined in the model. The model is trained on the train set, then evaluated after every epoch on the validation set and finally tested on the test set. The performance of the model is measured using the EM (exact match), BLEU-4 scores.
+We fine-tune a pre-trained CodeT5-base model on the constructed dataset. The model is trained on the summarization task as defined in the model. The model is trained on the train set, then evaluated after every epoch on the validation set and finally tested on the test set. The performance of the model is measured using the EM (exact match), BLEU-4 scores. 
