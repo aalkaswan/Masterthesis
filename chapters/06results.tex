@@ -27,10 +27,10 @@
 %         \end{itemize}
 % \end{itemize}
 % \newpage
-In this chapter the results of the experiments are presented, the results are grouped by research question.
+In this chapter, the results of the experiments are presented, and the results are grouped by research question.
 
 \section{RQ1: Data-richness study}
-From the dataset we collect around 40k stripped-description, and around 480k decompiled-description and C-description pairs. 
+From the dataset, we collect around 40k stripped-description, and around 480k decompiled-description and C-description pairs. 
 
 The performance of the base model on each of the datasets is presented in the following table:
 \label{tab:duplicated}
@@ -48,7 +48,7 @@ Stripped                                                                   & 9.5
 \caption{Result of fine-tuning CodeT5-base on the different datasets}
 \end{table}
 
-We found that the C and unstripped decompiled models generally produced good summaries. The summaries produced by the demi-stripped model where significantly worse, but most were still very usable. The stripped model mostly produced summaries which were unusable. Most sequences produced by the model were grammatically and syntactically correct and had some meaning. These could have easily passed for a summary, but not for the targeted function.
+We found that the C and unstripped decompiled models generally produced good summaries. The summaries produced by the demi-stripped model were significantly worse, but most were still very usable. The stripped model mostly produced summaries which were unusable. Most sequences produced by the model were grammatically and syntactically correct and had some meaning. These could have easily passed for a summary, but not for the targeted function.
 
 \label{tab:syntax}
 \begin{table}[!h]
@@ -77,7 +77,7 @@ Sort variables by type                                 & qsort an array of value
 
 
 \section{RQ2: Data-duplication study}
-After deduplication we are left with around 218k decompiled-description pairs and only 7.5k stripped-description pairs. The performance of the base model on each of the datasets is presented in the next table:
+After deduplication, we are left with around 218k decompiled-description pairs and only 7.5k stripped-description pairs. The performance of the base model on each of the datasets is presented in the next table:
 
 \label{tab:deduplicated}
 \begin{table}[!h]
@@ -94,8 +94,8 @@ Demi                                                                         & 1
 Stripped                                                                     & 7.03   & 0.91  & 6.15  &  7.49                            
 \end{tabular}
 \end{table}
-We find that the influence of deduplication on the performance of the base model is relatively small on source code, While having a relatively large impact on the decompiled and demi-stripped code. 
-Of the removed duplicates, we find that a relatively large number originates from common libraries that are packaged with the binaries. 
+We find that the influence of deduplication on the performance of the base model is relatively small on source code While having a relatively large impact on the decompiled and demi-stripped code. 
+Of the removed duplicates, we find that a relatively large number originates from common libraries that are packaged with binaries. 
 
 %maybe add example
 
@@ -130,7 +130,7 @@ Low                                                    & \textbf{8/25}          
 \end{table}
 
 We find that the number of bad descriptions is similar between the high and low scoring samples. On the flip side, the number of decompilation failures is much higher.
-Furthermore, we found that all the decompiled generally had very few recovered symbols, making it very syntactically poor compared to actual programming languages.
+Furthermore, we found that all the decompiled generally had very few recovered symbols, making them very syntactically poor compared to actual programming languages.
 
 %enter example here
 
@@ -150,4 +150,5 @@ TRANS                                                  & 5.22                   
 SPAN                                                   & 9.42                                & 3.15                             & 8.64  &  10.68                                & 22.18                              & 11.47                            & 21.19                                &   24.45                              
 \end{tabular}
 \end{table}
-The translation intermediate-training objective did not yield higher scores in neither stripped or demi-stripped code. We found that the deobfuscation objective resulted in significantly higher scores in both stripped and demi-stripped code. The span prediction intermediate-training objective did not yield any improvement for the stripped code, but did slightly improve the performance on demi-stripped code compared to the baseline.
+The translation intermediate-training objective did not yield higher scores in either stripped or demi-stripped code. We found that the deobfuscation objective resulted in significantly higher scores in both stripped and demi-stripped code. The span prediction intermediate-training objective did not yield any improvement for the stripped code but did slightly improve the performance on demi-stripped code compared to the baseline.
+
