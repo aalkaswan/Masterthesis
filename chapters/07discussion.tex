@@ -10,21 +10,22 @@
 % \newpage
 In this chapter, we will provide an analysis and reflection on the results of the experiments. Furthermore, we will discuss the threats to validity and the implications of this work.
 
-We found a relatively large difference between the number of recovered decompiled and stripped decompiled functions. This can likely be attributed to the fact that Ghidra struggles a lot more with recovering stripped functions. Recall that the symbol table commonly contains information regarding the location and name of functions. When this table is dropped, the start- and endpoints of functions are hard to infer by automatic tools, especially since many functions get inlined, and \(JUMP\) instructions replace \(CALL\) instructions. Asides from difficulties in demarcating functions, it is also difficult to align the associated source code function with the decompiled function. With unstripped code, the function name remains, meaning the functions can be aligned using the name. We attempted to utilize an existing solution by~\citeauthor{FunctionBoundaryDetection} called Jima~\cite{FunctionBoundaryDetection} to find function boundaries. Jima is the current SOTA tool for function boundary detection in stripped binaries. The tool is implemented as a plugin for Ghidra, but in our experiments, we find no statistical difference between the base performance of Ghidra and Jima on our own dataset.
+\section{Interpreting the Results}
+We found a relatively large difference between the number of recovered decompiled and stripped decompiled functions. This can likely be attributed to the fact that Ghidra struggles a lot more with recovering stripped functions. Recall that the symbol table commonly contains information regarding the location and name of functions. When this table is dropped, the start- and endpoints of functions are hard to infer by automatic tools, especially since many functions get inlined, and \(JUMP\) instructions replace \(CALL\) instructions. Asides from difficulties in demarcating functions, it is also difficult to align the associated source code function with the decompiled function. With unstripped code, the function name remains, meaning the functions can be aligned using the name. We attempted to utilise an existing solution by~\citeauthor{FunctionBoundaryDetection} called Jima~\cite{FunctionBoundaryDetection} to find function boundaries. Jima is the current state-of-the-art tool for function boundary detection in stripped binaries. The tool is implemented as a plugin for Ghidra, but in our experiments, we find no statistical difference between the base performance of Ghidra and Jima on our own dataset. The difficulties in extracting stripped functions, make training and applying a model to stripped binaries challenging.
 
-The model produced many instances where the output was grammatically correct and resembled an accurate summary but is meaningless in the context of the targeted function. This shows that the model, or more specifically the decoder, knows the output language well. This is likely because of the pre-training, which included several natural language objectives, and the fine-tuning, which is exclusively focused on natural language.
+The model produced many instances where the output was grammatically correct and resembled an accurate summary but is meaningless in the context of the targeted function. This shows that the model, or more specifically the decoder, knows the output language well. This is likely because of the pre-training, which included several natural language objectives~\cite{CodeT5}, and the fine-tuning, which is exclusively focused on natural language.
 
-Duplicates have a relatively significant impact on performance. Removing duplicates from the dataset puts the model's performance more in line with other deduplicated datasets, such as the CodeXGlue dataset used for CodeT5. Removing duplicates has a more considerable impact on decompiled code than on source code. As noted previously, duplicates are part of the problem space. We, therefore, consider them in the other experiments.
+Duplicates have a relatively significant impact on performance. Removing duplicates from the dataset puts the model's performance more in line with other deduplicated datasets, such as the CodeXGlue dataset used for CodeT5. Removing duplicates has a more considerable impact on decompiled code than on source code. As noted previously in Chapter~\ref{methodology}, duplicates are part of the problem space. We, therefore, consider them in the other experiments.
 
-We find a relatively small difference in performance between source code and decompiled code. This indicates that in-function-comments and variable names are relatively unimportant for the model performance. Although ~\citeauthor{PolyglotCodeBERT} observed that identifiers might be more important than syntax in the code-summarisation task, we can further conclude that the function name is explicitly essential for model performance. Removing the function name from the decompiled samples, as opposed to removing all identifiers in demi-stripping, results in slightly higher performance than demi-stripped code, which indicates a very high dependence on the name of the function in the code-summarisation task. 
+We find a relatively small difference in performance between source code and decompiled code (without demi-stripping). This indicates that in-function-comments and variable names are relatively unimportant for the model performance. Although ~\citeauthor{PolyglotCodeBERT} observed that identifiers might be more important than syntax in the code-summarisation task, we can further conclude that the function name is explicitly essential for model performance. Removing just the function name from the decompiled samples, as opposed to removing all identifiers in demi-stripping, results in slightly higher performance than demi-stripped code, which indicates a very high dependence on the name of the function in the code-summarisation task. 
 
-The prediction of function names from the function body is an already defined task, called "extreme summarisation", discussed in Chapter \ref{background}. While extreme summarisation will help recover function names for stripped functions, which can aid understanding, it has limited applicability to unstripped code, which still retains its function names. In Appendix \ref{app:ExtremeSum} we report on a few experiments on this task. We find that, similar to the regular summarisation task, and the model struggles with stripped code due to compiler issues, so we decided not to pursue this avenue any further. 
+The prediction of function names from the function body is an already defined task, called "extreme summarisation", discussed in Chapter \ref{background}. While extreme summarisation will help recover function names for stripped functions, which can aid understanding, it has limited applicability to unstripped code, which still retains its function names. In Appendix \ref{app:ExtremeSum} we report on a few experiments on this task. We find that, similar to the regular summarisation task, the model struggles with stripped code due to decompiler issues, so we decided not to pursue this avenue any further.
 
 Stripped code performs significantly worse than the demi-stripped code, even when the dataset size is matched. This indicates that the decompilation failures, which occur more with stripped code, also greatly impact model performance.
 
 Our choice of stripper might also influence the performance of the model. We find that our stripped code does not benefit from Ghidra's decompiler as much as other examples. For example, the decompiled stripped binaries used by \citeauthor{Nero} contain much more details than our samples. The sample shown in figure \ref{fig:Nero} is a binary compiled using GCC and optimisation level zero.
 
-\begin{figure}[!h]
+\begin{figure}[tbh]
   \centering
   \includegraphics[width=\linewidth]{img/Nero.png}
   \caption{Short decompiled function from the GNU Debugger~\cite{Nero} decompiled by Ghidra}
@@ -33,7 +34,7 @@ Our choice of stripper might also influence the performance of the model. We fin
 
 We observe that Ghidra's decompiler manages to recover a variable name and an external call to the strlen function. However, in our stripped samples, we do not observe this behaviour, none of the library functions is recovered, and Ghidra predicts no variable names even in samples compiled using -O0.
 
-From the intermediate-training objectives, we find that the translation task lowers performance. There could be two explanations for this: Firstly, the model is intermediately-trained on a PL-to-PL objective, while the fine-tuning objective is a PL-to-NL objective. This causes a so-called mismatch in training objectives. Recall that Transformers \ref{background} encodes the input into embedding space using an encoder. The decoder will then transform this embedding into the output. In this case, this mismatch in objectives causes the decoder to be weakened in PL-to-NL tasks by the intermediate-training objective. During the pre-training phase, which is applied by~\citeauthor{CodeT5}, the objectives are a mix of NL-to-PL, PL-to-PL and PL-to-NL tasks. This allows a single model to be flexible and to be applied to different tasks.
+From the intermediate-training objectives, we find that the translation task lowers performance. There could be two explanations for this: Firstly, the model is intermediately-trained on a PL-to-PL objective, while the fine-tuning objective is a PL-to-NL objective. This causes a so-called mismatch in training objectives. Recall that as discussed in Chapter~\ref{background} Transformers encode the input into embedding space using an encoder. The decoder will then transform this embedding into the output. In this case, this mismatch in objectives causes the decoder to be weakened in PL-to-NL tasks by the intermediate-training objective. During the pre-training phase, which is applied by~\citeauthor{CodeT5}, the objectives are a mix of NL-to-PL, PL-to-PL and PL-to-NL tasks. This allows a single model to be flexible and to be applied to different tasks.
 
 The second explanation for the lower performance after TRANS intermediate-training is that the target length is also different. While the output for code summarisation is at most 12 tokens long, Neural Code Translation has a target length of 512 tokens. In general, longer target sequences make it difficult for the Transformer model to apply the attention gradient over the entire sequence length properly.
 
@@ -52,12 +53,15 @@ This section will cover the threats to validity. These threats are split into th
 \subsection{External}
     \begin{description}
         \item[Resisting analysis] This work only focuses on stripping as a means of resisting binary analysis, other techniques like control flow or data obfuscation are also used to prevent reverse engineering. 
-        \item[Stripping techniques] In this work a very bipolar notion of stripping was used, the strip utility utilised removes any and all identifiers from the binary after compilation. Other techniques, which remove some identifiers before compilation, will result in different decompiled codes with some identifiers left behind by the compiler. 
+        \item[Stripping techniques] In this work a very bipolar notion of stripping was used; the strip utility utilised removes any and all identifiers from the binary after compilation. Other techniques, which remove some identifiers before compilation, will result in different decompiled codes with some identifiers left behind by the compiler. 
+        \item[Target Architecture] We only considered binaries and projects that were compiled to the x86/x64 architecture. Other architectures like ARM, and other programming languages could provide other results. 
+        \item[Open/Closed-Source] The data gathered for the experiments in this thesis, were exclusively from open-source projects. Decompiling closed-source projects is specifically forbidden by some EULAs and the lack of source code documentation makes it difficult to set a reference summary. However, reverse engineering open-source software is not very useful in practise, since the source-code is readily available. Closed-source software might have a different data distribution and will present other challenges like obfuscation.
     \end{description}
 \subsection{Construct}
     \begin{description}
-        \item[Mono-operation bias] This work only explores a single SOTA model and only focuses on NLP techniques. Other models, or other techniques, might be more successful at this task.
+        \item[Mono-operation bias] This work only explores a single state-of-the-art model and only focuses on NLP techniques. Other models, or other techniques, might be more successful at this task.
         \item[Mono-method bias] This work exclusively focuses on generating code summaries from functions to help REs understand binaries. While the code summarisation task is well defined in the source-code domain, it might not be well suited for binary analysis.
+        \item[Suitability of metrics] As discussed in Chapter~\ref{background}, the metrics used in this thesis do not capture semantic meaning. BLEU-4 and ROUGE-L have no semantic capabilities and METEOR only has a limited number of word-based rules.
     \end{description}
 
 
@@ -73,18 +77,18 @@ While the proposed solution has some limitations, especially stripped code, we h
 The model that we propose can provide REs with assistance in understanding decompiled binaries. However, the automation bias of such a model should be carefully considered, especially since REs can over-rely on the model outputs. The output might be incorrect and could lead the RE down an incorrect path, leading to the RE requiring a longer time to understand the binary or misunderstanding the binary, thus missing specific critical security faults or incorrectly labelling the binary as non-malicious. The model's output should always be taken as a reference by practitioners and checked for correctness.
 
 \subsection{Offensive Language}
-As we have observed in the training data, some of the comments that were mined from Github contain insulting or discriminatory statements \ref{fig:offensive}. The prevalence of offensive language in Software Engineering communities such as Github is a known issue~\cite{OffensiveLanguage}. The training data might contain such samples so that this same language might be reflected in the model output. 
+As we have observed in the training data, some of the comments that were mined from Github contain insulting or discriminatory statements, such as figure~\ref{fig:offensive}. Note that this comment has been removed in the most recent version. The prevalence of offensive language in Software Engineering communities such as Github is a known issue~\cite{OffensiveLanguage}. The training data might contain such samples so that this same language might be reflected in the model output. 
 
-\begin{figure}[H]
+\begin{figure}[tbh]
   \centering
-\begin{lstlisting}
+\begin{minted}{C}
 //WTF IS THIS!!!
 //Are you really trying to prevent the analyzed binary 
-from doing anything that would cause it to segfault irl?
+//from doing anything that would cause it to segfault irl?
 //WHY?
 //	- <Author removed>
-\end{lstlisting}
-  \caption{Example of an offensive comment from radareorg/radare2-bindings/radare2/libr/anal/esil.c, note that this comment has been removed in the most recent version}
+\end{minted}
+  \caption{Example of an offensive comment from radareorg/radare2-bindings/radare2 /libr/anal/esil.c,}
   \label{fig:offensive}
 \end{figure}
 

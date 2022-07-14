@@ -48,14 +48,14 @@ The dataset is split into a train, test and validation set. Similarly to the reg
 
 Since the output of the model is so short and generally contains up to 3 tokens~\cite{ExtremeSummarization}, BLEU would be unfit as a metric. Similarly to \citeauthor{ExtremeSummarization} and \citeauthor{PolyglotCodeBERT}, we chose to use the F1-score.
 \[\mathit{F1} = \frac{2*\mathit{Precision}*\mathit{Recall}}{\mathit{Precision}+\mathit{Recall}} * 100\] 
-Every function name is broken up into subtokens, the name "popStack'' would therefore be tokenised into "pop" and "stack". The precision and recall are then calculated by comparing the tokens in the anchor and the model prediction. Note that this does not take the order of the tokens into account.
+Every function name is broken up into subtokens, the name "popStack'' would therefore be tokenised into "pop" and "stack". The precision and recall are then calculated by comparing the tokens in the reference and the model prediction. Note that this does not take the order of the tokens into account.
 
 \citeauthor{PolyglotCodeBERT} report F1 scores ranging from 24 to 54 and F1 scores ranging from 0.41 and 0.54 with regular CodeBERT and PolyglotCodeBERT respectively. Note that these models were trained and evaluated on the CodeXGLUE~\cite{CodeXGlue} dataset which is deduplicated, while our own dataset is not. %Find limit for unusable samples
 
 \section{Results}
 We find that the results resembled the results from the regular code summarisation task. The CodeBERT model achieved an F1 score of 20.6 and 5.45 on the stripped and unstripped code respectively. Manual assessment of the produced samples shows that the model for unstripped code could produce some usable samples, but the stripped model was unable to produce almost anything of value.
 
-\begin{table}[h]
+\begin{table}[tbh]
 \begin{tabular}{l|ll}
 \multicolumn{1}{c|}{Reference} & \multicolumn{1}{c}{Decom} & \multicolumn{1}{c}{Stripped} \\ \hline
 main                           & main                      & main                         \\

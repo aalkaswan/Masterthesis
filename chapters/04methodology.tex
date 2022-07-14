@@ -8,30 +8,30 @@
 %     \item Explain the experimental setup for the pre-training, the translation, DOBF and span detection, how and why the pre-training steps were done, and how they were evaluated
 % \end{itemize}
 % \newpage
-The proposed solution starts with a data collection step, where we collect open-source projects. These open-source projects are then compiled and decompiled. The decompiled functions are aligned with the documentation extracted from the source code. This data is then processed to extract descriptive comments and split into multiple sets. Finally, we use this data to fine-tune and evaluate a pre-trained CodeT5 model. We also design a few intermediate-training objectives, which are applied to the model before fine-tuning to improve the model performance. 
+The proposed solution starts with a data collection step, where we collect open-source projects. We then compile and decompile these open-source projects. The decompiled functions are aligned with the documentation extracted from the source code. We then process this data to extract descriptive comments and split the data into multiple sets. Finally, we use this data to fine-tune and evaluate a pre-trained CodeT5 model. We also design a few intermediate-training objectives, which are applied to the model before fine-tuning to improve the model performance. 
 
 % \todo[inline]{you can include a running example to walk the reader through your approach, it makes it much easier to understand the work}
 
 \section{Data Collection}
 We require a dataset of decompiled functions labelled with a description to create and assess our solution. This dataset should be relatively large to suit the "data-hungry" nature of our deep-learning models. Furthermore, the dataset needs to feature a diverse set of data representative of our solution's actual real-life use case. 
-To create a large and diverse dataset to train and assess our solution we made use of BinSwarm~\cite{InlinedFunc}, an existing dataset of aligned decompiled and stripped decompiled functions. \footnote{BinSwarm; \url{https://hub.docker.com/r/binswarm/cbuilds}}
+To create a large and diverse dataset to train and assess our solution we made use of BinSwarm~\cite{FUNCRE}, an existing dataset of aligned decompiled and stripped decompiled functions. \footnote{BinSwarm; \url{https://hub.docker.com/r/binswarm/cbuilds}}
 
 Buildswarm starts by collecting C-based projects from Github. The projects are filtered to only include projects that are: Actively being developed, using Travis CI and built for Ubuntu Linux. The projects are built using Docker. The resulting binaries are then copied and stripped, and both the stripped and unstripped binaries are decompiled using Ghidra. The functions are extracted from the stripped and unstripped decompiled code and aligned with the source code. 
-We extract documentation from the original source code to add descriptive comments to this dataset. We depend on the documentation included in the source code by the original authors in the form of single and multiline comments. The decompiled functions are aligned with the comments in the source code by using srcML to extract any documentation located directly before a function signature and then finding the function signature and project name in the decompiled dataset.
+We extract documentation from the original source code to add descriptive comments to this dataset. We depend on the documentation included in the source code by the original authors in the form of single and multiline comments. We align the decompiled functions with the comments in the source code by using srcML\footnote{srcML: \url{https://www.srcml.org/}} to extract any documentation located directly before a function signature and then finding the function signature and project name in the decompiled dataset.
 
 A function's documentation often also contains other details besides the descriptive summary. We found that C projects do not follow a single documentation standard. For example, Javadoc for Java has a short one-line description or summary for each method at the beginning of the multiline comment block. In C, there is no singular documentation standard, so there might not be a single line summary, and we will need to locate it in the comment block automatically. 
-Furthermore, we found that a large number of functions did not have any documentation associated with them at all. To deal with these issues, we did not include any functions that are missing documentation. We devised a few simple rules to extract the summary to find the single sentence description.
+Furthermore, we found that a large number of functions did not have any documentation associated with them at all. To deal with these issues, we did not include any functions that are missing documentation. We devise a few simple rules to extract the summary to find the single sentence description.
 
-A high-level overview of this process can is found in figure \ref{fig:dataCollection}.
+A high-level overview of this process is shown in figure \ref{fig:dataCollection}.
 
-\begin{figure}[!h]
+\begin{figure}[tbh]
   \centering
-  \includegraphics[width=\linewidth]{img/dataCollection.png}
+  \includesvg[width=\linewidth]{img/dataCollection.svg}
   \caption{Data Collection}
   \label{fig:dataCollection}
 \end{figure}
 
-From the dataset of decompiled functions, another dataset is also created. We can emulate the process of stripping by removing all the identifiers from the decompiled code and replacing them with placeholders. For clarity, we call this demi-stripped data. Like the stripped dataset, the identifiers are all removed, but the decompiler still had access to the identifiers and could use the symbol table during decompilation. Most importantly, this demi-stripped dataset still has the same structure and control flow as the unstripped decompiled dataset.
+From the dataset of decompiled functions, we also create another dataset. We emulate the process of stripping by removing all the identifiers from the decompiled code and replacing them with placeholders. For clarity, we call this demi-stripped data. Like the stripped dataset, the identifiers are all removed, but the decompiler still had access to the identifiers and could use the symbol table during decompilation. Most importantly, this demi-stripped dataset still has the same structure and control flow as the unstripped decompiled dataset.
 
 \subsection{Dataset Split}
 The dataset is split into a train, test and validation set. These sets constitute approximately, 80\%, 10\% and 10\% respectively\cite{recommend_summarization} of the complete dataset. To prevent leakage of vocabulary and code patterns between the sets, we sample the sets in a cross-project manner. This means that an entire project gets assigned to one of the sets, and functions from the same project cannot be assigned to different sets. The different sets should also have a similar distribution of optimisation level and average source-code length.
@@ -49,7 +49,7 @@ The standard CodeT5 model was not pre-trained on any decompiled code. It might t
 
 To apply and assess other intermediate-training objectives, we train a CodeT5-base model on a predefined objective. Then after that intermediate-training step, we fine-tune the resulting model on our fine-tuning datasets. We essentially apply another training step to the already pre-trained base model. We can then measure the impact of the intermediate-training step on the model's performance after fine-tuning.
 
-\begin{figure}[H]
+\begin{figure}[tbh]
   \centering
   \includegraphics[width=\linewidth]{img/pre-training.png}
   \caption{Pre-Training}

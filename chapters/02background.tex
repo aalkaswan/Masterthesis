@@ -36,9 +36,9 @@ Unix and Unix-like operating systems include a strip utility. The strip utility 
 
 The strip utility as implemented in GNU/Linux removes the symbol table from the binary. The symbol table contains each symbols location, type and name. The symbol table can be dumped for a given binary by using the nm command \ref{fig:nm}, which is included in Unix and Unix-like operating systems.\footnote{nm: \url{https://pubs.opengroup.org/onlinepubs/9699919799/utilities/nm.html}}
 
-\begin{figure}[!h]
+\begin{figure}[tbh]
   \centering
-\begin{lstlisting}
+\begin{minted}{C}
                  U malloc
                  U memcpy
                  U memset
@@ -56,7 +56,7 @@ The strip utility as implemented in GNU/Linux removes the symbol table from the 
 000000000000c920 T secp256k1_context_destroy
 0000000000000000 D secp256k1_context_no_precomp
 ...
-\end{lstlisting}
+\end{minted}
   \caption[secp256k1]{Sample output of nm command from secp256k1\footnotemark ECDSA library}
   \label{fig:nm}
 \end{figure}
@@ -78,18 +78,18 @@ Ghidra contains many separate analysis modules that allow a reverse engineer to 
   \label{fig:ghidra}
 \end{figure}
 
-Ghidra features a disassembler \ref{fig:disassembler}, which will take the binaries and assemble them back into an intermediate representation. In the case of x86-x64 binaries like the binaries this project will focus on, this intermediate representation will be the assembly language. Processors have an associated language that defines the mapping
+Ghidra features a disassembler, as seen in figure~\ref{fig:disassembler}, which will take the binaries and assemble them back into an intermediate representation. In the case of x86-x64 binaries like the binaries this project will focus on, this intermediate representation will be the assembly language. Processors have an associated language that defines the mapping
 between user-readable assembly language instructions (e.g. MOV, ADD, etc.) and their corresponding byte values. In order to properly disassemble a binary image for a specific architecture, Ghidra requires a language module for that specific processor. A language module is software that implements language translation. Ghidra has a set of language modules for the most popular processor languages(such as x86-64, ARM, MIPS ..). Besides these architectures which are supported out-of-the-box, developers have also been extending Ghidra's support with custom processor architectures. For example, there exists a language module for the Allegrex CPU featured in the PlayStationPortable.  \footnote{Ghidra-Allegrex: \url{https://github.com/kotcrab/ghidra-allegrex}}
-\begin{figure}[H]
+\begin{figure}[tbh]
   \centering
   \includegraphics[width=\linewidth]{img/disassembler.png}
   \caption{Ghidra's disassembly window.}
   \label{fig:disassembler}
 \end{figure}
 
-The decompiler, also featured in Ghidra \ref{fig:decompiler}, is a processor language-agnostic transformation engine that takes the disassembled code and creates a source code representation. The representation is written in pseudo-C, a C-like representation that generally follows the general language conventions of C. The interactive decompiler window allows the user to directly see the correspondence between the pseudo-C and assembly representations. The user can also make changes to the decompiled code, such as changing automatically generated variable names and types and adding comments. 
+The decompiler, also featured in Ghidra, is a processor language-agnostic transformation engine that takes the disassembled code and creates a source code representation, as can be seen in Figure~\ref{fig:decompiler}. The representation is written in pseudo-C, a C-like representation that generally follows the general language conventions of C. The interactive decompiler window allows the user to directly see the correspondence between the pseudo-C and assembly representations. The user can also make changes to the decompiled code, such as changing automatically generated variable names and types and adding comments. 
 
-\begin{figure}[H]
+\begin{figure}[tbh]
   \centering
   \includegraphics[width=\linewidth]{img/decompiler.png}
   \caption{Ghidra's decompiler window showing a snippet of decompiled function from the secp256k1 ECDSA library}
@@ -110,9 +110,9 @@ A twist on the code summarisation task is proposed by~\citeauthor{ExtremeSummari
 In this thesis, the CodeT5 model~\cite{CodeT5}, which is based on Transformers~\cite{Transformers}, is extensively used. This section provides a quick overview of the Transformer architecture and the CodeT5 model.
 
 \subsubsection{Transformers}
-The current state-of-the-art NLP models for programming languages such as CodeT5~\cite{CodeT5}, CodeBERT~\cite{CodeBERT} and CodeX~\cite{CodeX} are all based on the Transformer architecture~\cite{Transformers}.
+The current state-of-the-art NLP models for programming languages such as CodeT5 ~\cite{CodeT5}, CodeBERT~\cite{CodeBERT} and Codex~\cite{CodeX} are all based on the Transformer architecture~\cite{Transformers}.
 
-Transformers were originally proposed by~\citeauthor{Transformers} as a novel sequence-to-sequence~\cite{seq2seq} (seq2seq) architecture. Unlike the Recurrent Neural Networks~\cite{RNN} (RNN), the Long Short-Term Memory~\cite{LSTM} (LSTM) variant of RNNs and Convolutional Neural Networks~\cite{CNN} (CNN), Transformers only use a mechanism called self-attention to capture dependencies between the input and output. 
+Transformers were originally proposed by~\citeauthor{Transformers} as a novel sequence-to-sequence~\cite{seq2seq} (seq2seq) architecture. Unlike the Recurrent Neural Networks~\cite{RNN} (RNN), the Long Short-Term Memory~\cite{LSTM} (LSTM) variant of RNNs~\cite{RNN} and Convolutional Neural Networks~\cite{CNN} (CNN), Transformers only use a mechanism called self-attention to capture dependencies between the input and output. 
 
 \begin{figure}[H]
   \centering
@@ -159,7 +159,7 @@ The most widely used metric in the code summarisation task is Bilingual Evaluati
 BLEU produces a percentage number between 0 and 100, which defines the similarity between a candidate and a set of reference sentences. BLEU-N calculates the cumulative N-gram precision scores, the number of matching N-grams divided by the total number of N-grams in the candidate sentence. The unigrams (1-grams) account for the adequacy of the candidate while the longer N-grams account for the fluency. 
 Two problems arise, firstly the score can be artificially inflated by simply repeating the same matching N-gram multiple times in the candidate \ref{tab:BLEUIssues}. Secondly, the score can also be inflated by creating a very short candidate such that the denominator is very small \ref{tab:BLEUIssues}.
 
-\begin{table}[H]
+\begin{table}[tbh]
 \begin{tabular}{l|lllllll|l}
 \rowcolor[HTML]{C0C0C0} 
 Reference & Calculate & the & Secp256k1 & private & key & given & generator & Precision \\ \hline
@@ -184,7 +184,7 @@ Where \(w_n\) is a uniform weight \(w_n = 1/N\).
 
 While \(N\) could be any number, BLEU-4 is the most commonly used variant. Since code summaries are generally quite short and the BLEU score was originally designed for use in longer corpora of text it can occur that there are no matching 4-grams between a candidate and reference summary\cite{evaluationSummarization}. The geometric mean will then result in 0, and the BLEU score will also be 0. To solve this, smoothing is applied. There exist a variety of smoothing methods, which all add a factor to the numerator and denominator of \(p_n\)~\cite{evaluationSummarization}.
 
-\begin{table}[H]
+\begin{table}[tbh]
 \begin{tabular}{l|l}
 \hline
 \rowcolor[HTML]{E8EAED} 

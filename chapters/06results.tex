@@ -30,15 +30,15 @@
 In this chapter, the results of the experiments are presented, and the results are grouped by research question.
 
 \section{RQ1: Data-richness study}
-We collect around 40k stripped-description from the dataset and around 480k decompiled-description and C-description pairs. 
+We collect around 40k stripped-description pairs from the dataset and around 480k decompiled-description and C-description pairs. 
 
-The performance of the base model on each of the datasets is presented in the following table:
+The performance of the CodeT5-base model on each of the datasets is presented in table~\ref{tab:deduplicated}. The metrics are calculated for each individual sample from the test set, and the average score is presented in the table.
 
-\begin{table}[!h]
+\begin{table}[tbh]
 \centering
-\begin{tabular}{lllll} 
+\begin{tabular}{lcccc} 
 \hline
-\rowcolor[rgb]{0.761,0.761,0.761} \multicolumn{1}{|l}{\textbf{Duplicated}} & BLEU-4 & EM    & METEOR & \multicolumn{1}{l|}{ROUGE-L}  \\ 
+\rowcolor[rgb]{0.761,0.761,0.761} \multicolumn{1}{|l}{\textbf{}} & BLEU-4 & EM    & METEOR & \multicolumn{1}{l|}{ROUGE-L}  \\ 
 \hline
 C                                                                          & 36.97  & 25.56 & 38.34  &  40.92                            \\
 DecomC                                                                     & 33.26  & 20.20 & 34.65  & 37.79                             \\
@@ -49,64 +49,38 @@ Stripped                                                                   & 9.5
 \label{tab:duplicated}
 \end{table}
 
-We found that the C and unstripped decompiled models generally produced good summaries. The summaries produced by the demi-stripped model were significantly worse, but most were still very usable. The stripped model mainly produced summaries which were unusable. Most sequences produced by the model were grammatically and syntactically correct and had some meaning. These could have easily passed for a summary but not for the targeted function.
+We found that the C and DecomC models generally produced good summaries, evident by the BLEU-4 scores over 30. The summaries produced by the demi-stripped model were substantially worse, but most were still very usable, evident by the BLEU-4 score above 20. The stripped model mainly produced unusable summaries, as evidenced by the BLEU-4 score below 10. However, most sequences produced by the model were grammatically and syntactically correct and had some meaning. These could have easily passed for a summary but not for the targeted function. For example, the model produced the output ``Unload a C library" against the reference ``Destroy getline object and nullify its pointer", this output is completely meaningless in the context of the targeted function.
 
-\begin{table}[!h]
-\centering
-\begin{tabular}{ll}
-\hline
-\rowcolor[HTML]{9B9B9B} 
-\multicolumn{1}{|l}{\cellcolor[HTML]{9B9B9B}Reference} & \multicolumn{1}{l|}{\cellcolor[HTML]{9B9B9B}Model Output}    \\ \hline
-Destroy getline object and nullify its pointer.               & Unload a C library.
-\end{tabular}
-\caption{Reference and output of fine-tuned stripped model, note that while the output reads like natural language, it is completely meaningless and incorrect in the context of this function.}
-\label{tab:syntax}
-\end{table}
-
-Furthermore, we observed some examples where the model produced a relatively good summary which would likely be very useful but differed heavily from the ground truth. This caused the output to be scored poorly, and the model would suffer a penalty during training.
-
-\begin{table}[!h]
-\centering
-\begin{tabular}{ll}
-\hline
-\rowcolor[HTML]{9B9B9B} 
-\multicolumn{1}{|l}{\cellcolor[HTML]{9B9B9B}Reference} & \multicolumn{1}{l|}{\cellcolor[HTML]{9B9B9B}Model Output} \\ \hline
-Sort variables by type                                 & qsort an array of values by type.       
-\end{tabular}
-\caption{Reference and output of fine-tuned decompiled model, note that the model output is more descriptive and accurate than the reference}
-\label{tab:betterOutput}
-\end{table}
-
+Furthermore, we observed some examples where the model produced a relatively good summary which would likely be very useful but differed heavily from the ground truth. This caused the output to be scored poorly, and the model would suffer a penalty during training. For example, the model produced the output ``qsort an array of values by type" against the reference ``Sort variables by type", which results in a low BLEU-4 score, despite being more descriptive.
 
 \section{RQ2: Data-duplication study}
-After deduplication, we are left with around 218k decompiled-description pairs and only 7.5k stripped-description pairs. The performance of the base model on each of the datasets is presented in the following table:
-
-\begin{table}[!h]
+After deduplication, we are left with around 218k decompiled-description pairs and only 7.5k stripped-description pairs. The performance of the base model on each of the datasets is presented in table~\ref{tab:deduplicated}:
+\begin{table}[htb]
 \centering
-\begin{tabular}{lllll} 
+\begin{tabular}{lcccc|c} 
 \hline
-\rowcolor[rgb]{0.749,0.749,0.749} \multicolumn{1}{|l}{\textbf{Deduplicated}} & BLEU-4 & EM    & METEOR & \multicolumn{1}{l|}{ROUGE-L}  \\ 
+\rowcolor[rgb]{0.729,0.729,0.729} \multicolumn{1}{|l}{\textbf{Deduplicated}} & BLEU-4 & EM    & METEOR & ROUGE-L & \multicolumn{1}{c|}{$\Delta$BLEU-4}  \\ 
 \hline
-C                                                                            & 28.17  & 14.82 & 30.6  &  33.51                             \\
-DecomC                                                                       & 19.09  & 4.68  & 21.12  &  24.55                             \\
-Demi                                                                         & 11.52  & 2.24  & 11.31  &  13.81
-                             \\
-Stripped                                                                     & 7.03   & 0.91  & 6.15  &  7.49                            
+C                                                                            & 28.17  & 14.82 & 30.60   & 33.51   & 8.80                                 \\
+DecomC                                                                       & 19.09  & 4.68  & 21.12  & 24.55   & 14.17                                \\
+Demi                                                                         & 11.52  & 2.24  & 11.31  & 13.81   & 10.17                                \\
+Stripped                                                                     & 7.03   & 0.91  & 6.15   & 7.49    & 2.50                                
 \end{tabular}
-\caption{Result of fine-tuning CodeT5-base on the deduplicated datasets}
+\caption{Result of fine-tuning CodeT5-base on the deduplicated datasets and the difference with the baseline}
 \label{tab:deduplicated}
 \end{table}
-We find that the influence of deduplication on the base model's performance is relatively small on source code While having a relatively large impact on the decompiled and demi-stripped code. 
-Of the removed duplicates, we find that a relatively large number originates from common libraries that are packaged with binaries. 
+
+We find that the influence of deduplication on the our model's performance is relatively small on source code, of only 14\%. Duplicate have a relatively large impact on the decompiled (43\%) and demi-stripped (47\%) code. 
+Of the removed duplicates, we observe that a relatively large number originates from common libraries that are packaged with binary programs. 
 
 %maybe add example
 
 \section{RQ3: Data-input study}
 We find that the performance on decompiled code is slightly lower than source code \ref{tab:duplicated}, while the performance of demi-stripped code is much higher than stripped code. To control for the impact of the dataset size, we reduce the size of the dataset of the demi-stripped code to match the stripped dataset and fine-tune a CodeT5-base model using the same setup.
 
-\begin{table}[!h]
+\begin{table}[tbh]
 \centering
-\begin{tabular}{llllll} 
+\begin{tabular}{llcccc} 
 \hline
 \rowcolor[rgb]{0.729,0.729,0.729} \multicolumn{1}{|l}{\textbf{}} & Samples & BLEU-4 & EM   & METEOR & \multicolumn{1}{l|}{ROUGE-L}  \\ 
 \hline
@@ -119,7 +93,7 @@ Stripped                                                         & 40k     & 9.5
 
 We find that the dataset size does not sufficiently explain the significant difference between the demi-stripped and stripped performance. To further investigate this, high and low performing stripped samples were investigated. We randomly select 25 samples above and 25 below a certain BLEU-4 score threshold. We set this threshold at a BLEU-4 score of 50.
 
-\begin{table}[!h]
+\begin{table}[tbh]
 \centering
 \begin{tabular}{lll}
 \hline
@@ -132,13 +106,15 @@ Low                                                    & \textbf{8/25}          
 \label{tab:manual}
 \end{table}
 
-We find that the number of inaccurate descriptions is similar between the high and low-scoring samples. However, on the flip side, the number of decompilation failures is much higher.
-Furthermore, we found that all the decompiled generally had very few recovered symbols, making them very syntactically poor compared to actual programming languages.
+We find that the number of inaccurate descriptions is similar (6 vs 7) between the high and low-scoring samples. However, on the flip side, the number of decompilation failures is much higher (4 vs 8).
+Furthermore, we found that all the decompiled code generally had very few recovered symbols, making it very syntactically poor compared to actual programming languages.
 
 %enter example here
 
 \section{RQ4: Model-objective study}
-\begin{table}[!h]
+The results of the intermediate-training objectives are presented in table~\ref{tab:intermediate}. Since the source code and unstripped code perform well, we only focus on improving the performance of the stripped and demi-stripped code. The intermediate-training objectives are baselined against the results from RQ1.
+
+\begin{table}[tbh]
 \centering
 \begin{tabular}{l|llll|llll}
 \rowcolor[rgb]{0.749,0.749,0.749} \multicolumn{1}{l}{} & \multicolumn{4}{l|}{Stripped}                                                                                                                        & Demi                               &                                  &                                      &                                       \\ 
@@ -146,12 +122,11 @@ Furthermore, we found that all the decompiled generally had very few recovered s
 \begin{sideways}\textbf{}\end{sideways}                & \begin{sideways}BLEU4\end{sideways} & \begin{sideways}EM\end{sideways} & \begin{sideways}METEOR\end{sideways} & \begin{sideways}ROUGE\_L\end{sideways} & \begin{sideways}BLEU4\end{sideways} & \begin{sideways}EM\end{sideways} & \begin{sideways}METEOR\end{sideways} & \begin{sideways}ROUGE\_L\end{sideways}  \\ 
 \hline
 Baseline                                               & 9.53                                & 3.41                          & 8.53                                & 10.43                                   & 21.69                              & 13.10  & 21.22                                & 23.33                                                           \\
-TRANS                                                  & 5.22                                & 0.92     & 4.81  &  5.44                                                       & 20.74                              & 11.72                               & 20.3  &  22.37                               \\
+TRANS                                                  & 5.22                                & 0.92     & 4.81  &  5.44                                                       & 20.74                              & 11.72                               & 20.30  &  22.37                               \\
 \textbf{DOBF}                                          & \textbf{9.98}                       & \textbf{3.49}                    & \textbf{8.81}                       & \textbf{11.17}                       & \textbf{23.23}                     & \textbf{12.35}                   & \textbf{22.77}                       & \textbf{24.93}                        \\
 SPAN                                                   & 9.42                                & 3.15                             & 8.64  &  10.68                                & 22.18                              & 11.47                            & 21.19                                &   24.45                              
 \end{tabular}
 \caption{Result of fine-tuning CodeT5-base after intermediate-training}
 \label{tab:intermediate}
 \end{table}
-The translation intermediate-training objective did not yield higher scores in either stripped or demi-stripped code. We found that the deobfuscation objective resulted in significantly higher scores in both stripped and demi-stripped code. The span prediction intermediate-training objective did not yield any improvement for the stripped code but slightly improved the performance on demi-stripped code compared to the baseline.
-
+Adding the translation intermediate-training objective did not yield higher scores in either stripped or demi-stripped code across all metrics. We found that the deobfuscation objective resulted in substantially higher scores in both stripped and demi-stripped code across the metrics. The only exception being the EM rate. The span prediction intermediate-training objective yielded mixed results, only improving the METEOR and ROUGE-L scores for stripped code and BLEU-4 and ROUGE-L for the demi-stripped code.

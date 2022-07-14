@@ -26,7 +26,7 @@ Unlike previous works, \textbf{VarBERT} \cite{VarBERT} uses a Transformer-based 
 
 \citeauthor{PolyglotCodeBERT} use the CodeXGLUE dataset to train their model. The multilingual aspect is achieved by mixing samples from different programming languages in training set to train the model in all languages simultaneously. The single multilingual model is then tested on the test set of the different programming languages in the CodeXGLUE dataset. Using this approach the authors were able to report the highest-scoring model on the CodeXGLUE \cite{CodeXGlue} \footnote{CodeXGLUE benchmark: \url{https://microsoft.github.io/CodeXGLUE/}} Code Summarisation benchmark. Their score was later surpassed by CodeT5 \cite{CodeT5}. PolyglotCodeBERT reported an average BLEU4 score of 20.06 over all the programming languages, with the greatest improvements reported in Ruby and JavaScript, the languages with the fewest samples in CodeXGLUE. Recently, DistillCodeT5 reported an even higher score than PolyglotCodeBERT and CodeT5. Unfortunately, as of the writing of this work, DistillCodeT5 is not yet published, and we were unable to find any details about the implementation.
 
-\begin{table}[!h]
+\begin{table}[tbh]
 \begin{sideways}
 \begin{tabulary}{1.5\textwidth}{lLLLLL}
 \rowcolor[HTML]{C0C0C0} 
@@ -39,7 +39,7 @@ PolyglotCodeBERT & Code summarisation       & Fine-tuned CodeBERT model   & Sour
 Our work & Binary Code summarisation              & Intermediate-trained and fine-tuned CodeT5 model   & Stripped and unstripped decompiled binary & Function level    &   \\
 \end{tabulary}
 \end{sideways}
-\caption{Overview of related works and our proposed solution.}
+\caption{Overview of related work and our proposed solution.}
 \label{tab:related}
 \end{table}
 
