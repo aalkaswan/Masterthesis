@@ -23,17 +23,17 @@
 %     \end{itemize}
 %     \item RQ4:
 %         \begin{itemize}
-%         \item Using the DOBF pre-training objective we were able to increase the performance of the model on the stripped data and demi-stripped data, the other objectives did not perform better than the base model
+%         \item Using the DOBF pre-training objective, we were able to increase the model's performance on the stripped and demi-stripped data. The other objectives did not perform better than the base model
 %         \end{itemize}
 % \end{itemize}
 % \newpage
 In this chapter, the results of the experiments are presented, and the results are grouped by research question.
 
 \section{RQ1: Data-richness study}
-From the dataset, we collect around 40k stripped-description, and around 480k decompiled-description and C-description pairs. 
+We collect around 40k stripped-description from the dataset and around 480k decompiled-description and C-description pairs. 
 
 The performance of the base model on each of the datasets is presented in the following table:
-\label{tab:duplicated}
+
 \begin{table}[!h]
 \centering
 \begin{tabular}{lllll} 
@@ -46,11 +46,11 @@ Demi                                                                       & 21.
 Stripped                                                                   & 9.53   & 3.41  & 8.53  &  10.43                          
 \end{tabular}
 \caption{Result of fine-tuning CodeT5-base on the different datasets}
+\label{tab:duplicated}
 \end{table}
 
-We found that the C and unstripped decompiled models generally produced good summaries. The summaries produced by the demi-stripped model were significantly worse, but most were still very usable. The stripped model mostly produced summaries which were unusable. Most sequences produced by the model were grammatically and syntactically correct and had some meaning. These could have easily passed for a summary, but not for the targeted function.
+We found that the C and unstripped decompiled models generally produced good summaries. The summaries produced by the demi-stripped model were significantly worse, but most were still very usable. The stripped model mainly produced summaries which were unusable. Most sequences produced by the model were grammatically and syntactically correct and had some meaning. These could have easily passed for a summary but not for the targeted function.
 
-\label{tab:syntax}
 \begin{table}[!h]
 \centering
 \begin{tabular}{ll}
@@ -60,10 +60,11 @@ We found that the C and unstripped decompiled models generally produced good sum
 Destroy getline object and nullify its pointer.               & Unload a C library.
 \end{tabular}
 \caption{Reference and output of fine-tuned stripped model, note that while the output reads like natural language, it is completely meaningless and incorrect in the context of this function.}
+\label{tab:syntax}
 \end{table}
 
-Furthermore, we observed some examples where the model produced a relatively good summary which would likely be very useful, but differed heavily from the ground truth. This caused the output to be scored poorly and the model would suffer a penalty during training.
-\label{tab:betterOutput}
+Furthermore, we observed some examples where the model produced a relatively good summary which would likely be very useful but differed heavily from the ground truth. This caused the output to be scored poorly, and the model would suffer a penalty during training.
+
 \begin{table}[!h]
 \centering
 \begin{tabular}{ll}
@@ -73,16 +74,15 @@ Furthermore, we observed some examples where the model produced a relatively goo
 Sort variables by type                                 & qsort an array of values by type.       
 \end{tabular}
 \caption{Reference and output of fine-tuned decompiled model, note that the model output is more descriptive and accurate than the reference}
+\label{tab:betterOutput}
 \end{table}
 
 
 \section{RQ2: Data-duplication study}
-After deduplication, we are left with around 218k decompiled-description pairs and only 7.5k stripped-description pairs. The performance of the base model on each of the datasets is presented in the next table:
+After deduplication, we are left with around 218k decompiled-description pairs and only 7.5k stripped-description pairs. The performance of the base model on each of the datasets is presented in the following table:
 
-\label{tab:deduplicated}
 \begin{table}[!h]
 \centering
-\caption{Result of fine-tuning CodeT5-base on the deduplicated datasets}
 \begin{tabular}{lllll} 
 \hline
 \rowcolor[rgb]{0.749,0.749,0.749} \multicolumn{1}{|l}{\textbf{Deduplicated}} & BLEU-4 & EM    & METEOR & \multicolumn{1}{l|}{ROUGE-L}  \\ 
@@ -93,15 +93,17 @@ Demi                                                                         & 1
                              \\
 Stripped                                                                     & 7.03   & 0.91  & 6.15  &  7.49                            
 \end{tabular}
+\caption{Result of fine-tuning CodeT5-base on the deduplicated datasets}
+\label{tab:deduplicated}
 \end{table}
-We find that the influence of deduplication on the performance of the base model is relatively small on source code While having a relatively large impact on the decompiled and demi-stripped code. 
+We find that the influence of deduplication on the base model's performance is relatively small on source code While having a relatively large impact on the decompiled and demi-stripped code. 
 Of the removed duplicates, we find that a relatively large number originates from common libraries that are packaged with binaries. 
 
 %maybe add example
 
 \section{RQ3: Data-input study}
 We find that the performance on decompiled code is slightly lower than source code \ref{tab:duplicated}, while the performance of demi-stripped code is much higher than stripped code. To control for the impact of the dataset size, we reduce the size of the dataset of the demi-stripped code to match the stripped dataset and fine-tune a CodeT5-base model using the same setup.
-\label{tab:demiSize}
+
 \begin{table}[!h]
 \centering
 \begin{tabular}{llllll} 
@@ -112,11 +114,11 @@ Demi                                                             & 40k     & 17.
 Stripped                                                         & 40k     & 9.53   & 3.41 & 6.6  &  7.61                            
 \end{tabular}
 \caption{Comparison between a reduced Demi-stripped and Stripped CodeT5-base model}
+\label{tab:demiSize}
 \end{table}
 
-We find that the dataset size does not sufficiently explain the large difference between the demi-stripped and stripped performance. To further investigate this, high and low performing stripped samples were investigated. We randomly select 25 samples above and 25 samples below a certain BLEU-4 score threshold. We set this threshold at a BLEU-4 score of 50.
+We find that the dataset size does not sufficiently explain the significant difference between the demi-stripped and stripped performance. To further investigate this, high and low performing stripped samples were investigated. We randomly select 25 samples above and 25 below a certain BLEU-4 score threshold. We set this threshold at a BLEU-4 score of 50.
 
-\label{tab:manual}
 \begin{table}[!h]
 \centering
 \begin{tabular}{lll}
@@ -127,18 +129,17 @@ High                                                   & 4/25                   
 Low                                                    & \textbf{8/25}                     & 7/25                                                           
 \end{tabular}
 \caption{Number of samples which were badly decompiled and which had a badly mined description respectively}
+\label{tab:manual}
 \end{table}
 
-We find that the number of bad descriptions is similar between the high and low scoring samples. On the flip side, the number of decompilation failures is much higher.
+We find that the number of inaccurate descriptions is similar between the high and low-scoring samples. However, on the flip side, the number of decompilation failures is much higher.
 Furthermore, we found that all the decompiled generally had very few recovered symbols, making them very syntactically poor compared to actual programming languages.
 
 %enter example here
 
 \section{RQ4: Model-objective study}
-\label{tab:intermediate}
 \begin{table}[!h]
 \centering
-\caption{Result of fine-tuning CodeT5-base after intermediate-training}
 \begin{tabular}{l|llll|llll}
 \rowcolor[rgb]{0.749,0.749,0.749} \multicolumn{1}{l}{} & \multicolumn{4}{l|}{Stripped}                                                                                                                        & Demi                               &                                  &                                      &                                       \\ 
 \cline{2-9}
@@ -149,6 +150,8 @@ TRANS                                                  & 5.22                   
 \textbf{DOBF}                                          & \textbf{9.98}                       & \textbf{3.49}                    & \textbf{8.81}                       & \textbf{11.17}                       & \textbf{23.23}                     & \textbf{12.35}                   & \textbf{22.77}                       & \textbf{24.93}                        \\
 SPAN                                                   & 9.42                                & 3.15                             & 8.64  &  10.68                                & 22.18                              & 11.47                            & 21.19                                &   24.45                              
 \end{tabular}
+\caption{Result of fine-tuning CodeT5-base after intermediate-training}
+\label{tab:intermediate}
 \end{table}
-The translation intermediate-training objective did not yield higher scores in either stripped or demi-stripped code. We found that the deobfuscation objective resulted in significantly higher scores in both stripped and demi-stripped code. The span prediction intermediate-training objective did not yield any improvement for the stripped code but did slightly improve the performance on demi-stripped code compared to the baseline.
+The translation intermediate-training objective did not yield higher scores in either stripped or demi-stripped code. We found that the deobfuscation objective resulted in significantly higher scores in both stripped and demi-stripped code. The span prediction intermediate-training objective did not yield any improvement for the stripped code but slightly improved the performance on demi-stripped code compared to the baseline.
 

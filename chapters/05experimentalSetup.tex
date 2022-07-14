@@ -18,20 +18,20 @@
 % \newpage
 
 \section{Research Questions}
-To reach our goal of creating an automatic system for decompiled code summarization, we must create and assess our model, we define research questions which will be answered throughout the thesis. Firstly it is important to assess the different datasets and set a baseline for each of them. We can then investigate the impact of different aspects of the data. Finally, we can apply this knowledge to design intermediate-training objectives, which will further improve the performance.
+We must create and assess our model to reach our goal of creating an automatic system for decompiled code summarisation. We define research questions which will be answered throughout the thesis. Firstly it is essential to assess the different datasets and set a baseline for each. We can then investigate the impact of different aspects of the data. Finally, we can apply this knowledge to design intermediate-training objectives, further improving performance.
 
 \begin{itemize}
     \item \textbf{RQ1: How do different input types (source, unstripped decompiled, demi-stripped, stripped) affect the model's performance? (data-richness effect)}
     \begin{sloppypar}
-    Firstly, we want to know how the impact of the data-richness on the model performance. The different datasets that we have different degrees of data richness, the source code has all of its identifiers and has comments in the code. Unstripped decompiled code has no comments and loses many of its identifiers, some noise is also introduced by the decompiler. Demi-stripped data loses all of the remaining identifiers. Stripped data, also has no identifiers and introduces even more decompilation noise.
+    Firstly, we want to know the impact of the data-richness on the model performance. The different datasets have different degrees of data richness. The source code has all of its identifiers and comments in code. Unstripped decompiled code has no comments and loses many of its identifiers. The decompiler also introduces some noise. Demi-stripped data loses all of the remaining identifiers. Stripped data also has no identifiers and introduces even more decompilation noise.
     \end{sloppypar}
     \item \textbf{RQ2: What is the impact of data duplication on the model's performance? (data-duplication effect)}
     \begin{sloppypar}
-    Secondly, we will evaluate how the model reacts to data duplication, whether the model performance is simply a result of the memorization of certain examples, or if the performance is a result of a generalizable understanding of the data.
+    Secondly, we will evaluate how the model reacts to data duplication, whether the model performance is simply a result of the memorisation of certain examples, or if the performance is a result of a generalisable understanding of the data.
     \end{sloppypar}
     \item \textbf{RQ3: To what extent each aspect of stripped decompiled binaries impacts the model's performance? (data-input study)}
     \begin{sloppypar}
-    The different datasets each contain different aspects of the original source code, which of these aspects are most important for the model performance? 
+    The different datasets each contain different aspects of the original source code. Which of these aspects are most important for the model performance? 
     \end{sloppypar}
     \item \textbf{RQ4: How do different intermediate-training objectives affect the model's performance? (model-objective effect)}
     \begin{sloppypar}
@@ -40,14 +40,15 @@ To reach our goal of creating an automatic system for decompiled code summarizat
 \end{itemize}
 
 \section{Dataset}
-To answer the research questions a diverse and representative dataset must be constructed. The Buildswarm dataset contains around 1.8m aligned decompiled-sourcecode pairs as well as 400k aligned stripped-sourcecode pairs. The large difference is caused by the inherent difficulty of finding functions in stripped decompiled code. 
+To answer the research questions, a diverse and representative dataset must be constructed. The Buildswarm dataset contains around 1.8m aligned decompiled-sourcecode pairs as well as 400k aligned stripped-sourcecode pairs. The significant difference is caused by the inherent difficulty of finding functions in stripped decompiled code. 
 
-From this dataset we collect any documentation that is located above the functions using srcML \ref{fig:srcML}. 
-\label{fig:srcML}
+From this dataset, we collect any documentation located above the functions using srcML \ref{fig:srcML}. 
+
 \begin{figure}[H]
   \centering
   \includegraphics[width=\linewidth]{img/srcML.png}
   \caption{Example function with its documentation (truncated)}
+  \label{fig:srcML}
 \end{figure}
 
 This documentation can be split into the following classes: 
@@ -79,11 +80,10 @@ This documentation can be split into the following classes:
 
 The data is pre-processed using the Pandas \footnote{Pandas: \url{https://pandas.pydata.org/}} data analysis library as well as the Pandarallel \footnote{Pandarallel: \url{https://pypi.org/project/pandarallel/}} parrallelizability extention for Pandas.
 
-The samples are pre-processed by first extracting the function name and adding it as a column to the data, for the stripped samples the alignment with C is utilized by extracting the function name from the source code for each of the samples. The samples are aligned with the comment data using the name of the file where they reside appended with the function name, for instance: \textit{/Repos\_Bionic/ secp256k1/secp256k1.c:secp256k1\_pubkey\_load}. We further pre-process the data by removing any newlines from the function body and by unescaping any characters that have been escaped for file safety purposes such as \&gt; for $>$.
+The samples are pre-processed by first extracting the function name and adding it as a column to the data. For the stripped samples, the alignment with C is utilised by extracting the function name from the source code for each sample. Next, the samples are aligned with the comment data using the file name where they reside appended with the function name, for instance: \textit{/Repos\_Bionic/ secp256k1/secp256k1.c:secp256k1\_pubkey\_load}. We further pre-process the data by removing any newlines from the function body and by unescaping any characters that have been escaped for file safety purposes, such as \&gt; for $>$.
 
 The samples are split into a train, validation and test set. Each set is collected into a single .jsonl \footnote{JSON Lines: \url{https://jsonlines.org/}} file.
 
-\label{fig:jsonl}
 \begin{figure}[H]
   \centering
 \begin{lstlisting}[breaklines=true]
@@ -92,18 +92,18 @@ The samples are split into a train, validation and test set. Each set is collect
 {"repo":"author/project","docstring_tokens":["Tokenized", "description"], "code_tokens":["Tokenized", "code"], "partition": "valid"}
 ]
 \end{lstlisting}
-  \caption{Example entries of a .jsonl file with two dummy entries.}
+  \caption{Example entries of a .jsonl file with two dummy entries}
+  \label{fig:jsonl}
 \end{figure}
 
 
-To answer the second research question the dataset must be deduplicated. The dataset is deduplicated using a fork\footnote{Near Duplicate Code Detector: \url{https://github.com/SERG-Delft/near-duplicate-code-remover}} of the near-duplicate-code-detector \cite{allamanis_adverse}. We use this tool to compare all the functions in the dataset and to find clusters of near-duplicate functions. We randomly select one function per cluster and discard the rest from the dataset. 
+To answer the second research question, the dataset must be deduplicated. The dataset is deduplicated using a fork\footnote{Near Duplicate Code Detector: \url{https://github.com/SERG-Delft/near-duplicate-code-remover}} of the near-duplicate-code-detector~\cite{allamanis_adverse}. We use this tool to compare all the functions in the dataset and to find clusters of near-duplicate functions. We randomly select one function per cluster and discard the rest from the dataset. 
 
 % Slightly expand this 
 
 \section{Model Configuration}
-To first establish a performance baseline we trained a CodeT5-base model on the summarization task on source C. This can be used to compare the decompiled C, stripped decompiled C and the demi-stripped datasets to the source code. For deduplicated code, the results can be compared with the performance of CodeT5-base on the code summarization task \cite{CodeT5}, where the performance varies between 15.24 and 26.03 BLEU4 scores depending on the language. Based on this, we set the baseline for a usable summarization model around a BLEU4 score of 15, with anything lower than a BLEU4 score of 10, essentially unusable. Besides the standard BLEU and EM metrics used by most code summarization works \cite{CodeBERT, CodeT5, CodeXGlue, PolyglotCodeBERT, CodeSumSmallLocal, recommend_summarization}, we also include METEOR and ROUGE-L. 
+To first establish a performance baseline, we trained a CodeT5-base model on the summarisation task on source C. This can be used to compare the decompiled C, stripped decompiled C and the demi-stripped datasets to the source code. For deduplicated code, the results can be compared with the performance of CodeT5-base on the code summarisation task~\cite{CodeT5}, where the performance varies between 15.24 and 26.03 BLEU4 scores depending on the language. Based on this, we set the baseline for a usable summarisation model around a BLEU4 score of 15, with anything lower than a BLEU4 score of 10 essentially unusable. Besides the standard BLEU and EM metrics used by most code summarisation works~\cite{CodeBERT, CodeT5, CodeXGlue, PolyglotCodeBERT, CodeSumSmallLocal, recommend_summarization}, we also include METEOR and ROUGE-L. 
 
-\label{tab:packages}
 \begin{table}[!h]
 \centering
 \begin{tabular}{ll}
@@ -119,11 +119,11 @@ tree-sitter    & 0.20.0      \\
 Ghidra         & 10.0.4      \tablefootnote{It is not recommended to use Ghidra versions before 10.1 since these versions have not been patched against a Log4J RCE}\\ \hline
 \end{tabular}
 \caption{The most important packages and their versions}
+\label{tab:packages}
 \end{table}
 
-A grid search of the optimal settings was infeasible from a time perspective, so training was performed using mostly the recommended settings. For the decompiled, stripped, and demi-stripped the source length was doubled to 512 tokens instead of the standard 256 tokens used for the source code. This was done to compensate for the fact that the average length of decompiled and stripped functions was almost double that of the source code. We utilized two different servers for training\ref{tab:server}. The training was performed on either an NVIDIA RTX3080 with 10GB of VRAM or an NVIDIA GTX 1080ti with 11GB of VRAM. The authors of CodeT5 used an NVIDIA A100 GPU with 40G of VRAM for fine-tuning \cite{CodeT5}. To compensate for the lack of memory we reduced the batch size to 2, which was the maximum length that still fit both GPUs \ref{tab:modelSettings}.
+A grid search of the optimal settings was infeasible from a time perspective, so training was performed mainly using the recommended settings. For the decompiled, stripped, and demi-stripped, the source length is doubled to 512 tokens instead of the standard 256 tokens used for the source code. This was done to compensate for the fact that the average length of decompiled and stripped functions was almost double that of the source code. We utilised two different servers for training\ref{tab:server}. The training was performed on either an NVIDIA RTX3080 with 10GB of VRAM or an NVIDIA GTX 1080ti with 11GB of VRAM. The authors of CodeT5 used an NVIDIA A100 GPU with 40G of VRAM for fine-tuning~\cite{CodeT5}. To compensate for the lack of memory, we reduced the batch size to 2, which was the maximum length that still fit both GPUs \ref{tab:modelSettings}.
 
-\label{tab:modelSettings}
 \begin{table}[!h]
 \centering
 \begin{tabular}{l|ll}
@@ -137,9 +137,9 @@ Batch Size      & 32          & \textbf{2}              \\
 Vocabulary Size & 32100       & 32100                  
 \end{tabular}
 \caption{Model configuration of the base model and our used settings}
+\label{tab:modelSettings}
 \end{table}
 
-\label{tab:server}
 \begin{table}[!h]
 \centering
 \begin{tabular}{l|ll}
@@ -153,20 +153,20 @@ VRAM    & 11GB               & 10GB                         \\
 Storage & 7.3TB HDD          & 1TB NVME SSD                
 \end{tabular}
 \caption{Hardware used for training and evaluation}
+\label{tab:server}
 \end{table}
 
 \section{Manual Evaluation}
-To investigate the third research question, the results of the different datasets are compared, to see the influence of the different aspects of code on the model performance. Furthermore, we observe that there could be two principal reasons for a sample to be malformed. Firstly, Ghidra can fail to properly decompile the function. Secondly, during the data collection phase, the comment might not have been parsed properly, which results in an incorrect description of the function. To investigate the influence of this on the performance of the stripped model, we randomly sample 25 high and low-performing samples (in terms of BLEU-4 score) and manually analyse the decompiled code and the description. 
+To investigate the third research question, the results of the different datasets are compared to see the influence of the different aspects of code on the model performance. Furthermore, we observe that there could be two principal reasons for a sample to be malformed. Firstly, Ghidra can fail to decompile the function correctly. Secondly, during the data collection phase, the comment might not have been appropriately parsed, which results in an incorrect description of the function. To investigate this influence on the stripped model's performance, we randomly sample 25 high and low-performing samples (in terms of BLEU-4 score) and manually analyse the decompiled code and the description. 
 
 \section{Intermediate-Training}
 
-To answer the fourth and final research question, we constructed three intermediate-training objectives.
+We constructed three intermediate-training objectives to answer the fourth and final research question.
 
 \subsection{Translation}
-The first defined intermediate-training task is a Neural Machine Translation task. In this code-to-code task, the model has to translate the source code from one programming language to another \cite{CodeXGlue}. 
-In our case, we implemented a translation from demi-stripped to unstripped decompiled code. Note that, by construction, the only difference between decompiled and demi-stripped code, is the lack of identifiers in the demi-stripped code.
+The first defined intermediate-training task is a Neural Machine Translation task. In this code-to-code task, the model has to translate the source code from one programming language to another~\cite{CodeXGlue}. 
+We implemented a translation from demi-stripped to unstripped decompiled code in our case. Note that, by construction, the only difference between decompiled and demi-stripped code is the lack of identifiers in the demi-stripped code.
 
-\label{fig:tanslation}
 \begin{figure}[H]
   \centering
 \begin{lstlisting}
@@ -188,12 +188,12 @@ target: "uint8_t ldns_rr_label_count (const ldns_rr * rr ){
 }"
 \end{lstlisting}
   \caption{Translation intermediate training objective}
+  \label{fig:tanslation}
 \end{figure}
 
 \subsection{Deobfuscation}
-The second defined task is a deobfuscation objective. In this code-to-text objective, the model is tasked with predicting the identifiers in demi-stripped code. Recall, that in the demi-stripped code, all identifiers are masked with meaningless placeholders, where duplicate identifiers are assigned the same placeholder. The model will have to output a map of the placeholders to their original value. While the output of the model is somewhat textual and not code, it is not exactly natural language.
+The second defined task is a deobfuscation objective. In this code-to-text objective, the model is tasked with predicting the identifiers in demi-stripped code. Recall that in the demi-stripped code, all identifiers are masked with meaningless placeholders, where duplicate identifiers are assigned the same placeholder. The model will have to output a map of the placeholders to their original value. While the output of the model is somewhat textual and not code, it is not precisely natural language.
 
-\label{fig:dobf}
 \begin{figure}[H]
   \centering
 \begin{lstlisting}
@@ -211,13 +211,14 @@ target: "{MASK0: ldns_rr_label_count, MASK1:
 ldns_rr_owner, MASK2: ldns_dname_label_count}"
 \end{lstlisting}
   \caption{Deofbuscation intermediate training objective}
+  \label{fig:dobf}
 \end{figure}
 
 
 \subsection{Span Prediction}
-Finally, we define a Span Prediction objective. In this code-to-text objective, the model is tasked with recovering the identifiers from demi-stripped code. Unlike the DOBF objective, every identifier (even matching identifiers) is assigned unique placeholders, the model has to output the assignment of the placeholders in a form which is closer to natural language and puts more emphasis on duplicated identifiers which might be more important.
+Finally, we define a Span Prediction objective. The model is tasked with recovering the identifiers from demi-stripped code in this code-to-text objective. Although, unlike the DOBF objective, every identifier (even matching identifiers) is assigned unique placeholders, the model has to output the assignment of the placeholders in a form closer to natural language and puts more emphasis on duplicated identifiers which might be more critical.
 
-\label{fig:spanDetection}
+
 \begin{figure}[H]
   \centering
 \begin{lstlisting}
@@ -235,5 +236,6 @@ target: "MASK0 ldns_rr_label_count MASK1
 ldns_rr_owner MASK2 ldns_dname_label_count"
 \end{lstlisting}
   \caption{Span-detection intermediate training objective}
+  \label{fig:spanDetection}
 \end{figure}
 

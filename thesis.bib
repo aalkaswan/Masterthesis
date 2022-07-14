@@ -29,13 +29,12 @@ keywords = {binary code analysis, Type inference, program executables}
   doi={10.1109/DSN48063.2020.00028}}
 
 @misc{InlinedFunc,
-      title={Finding Inlined Functions in Optimized Binaries}, 
-      author={Toufique Ahmed and Premkumar Devanbu and Anand Ashok Sawant},
-      year={2021},
-      eprint={2103.05221},
-      archivePrefix={arXiv},
-      primaryClass={cs.SE}
-}
+    author={Ahmed, Toufique and Devanbu, Premkumar and Sawant, Anand Ashok},    
+    journal={IEEE Transactions on Software Engineering},   
+    title={Learning to Find Usage of Library Functions in Optimized Binaries},   
+    year={2021},  volume={},  number={},  
+    pages={1-1},  
+    doi={10.1109/TSE.2021.3106572}}
 
 @misc{roberta,
       title={RoBERTa: A Robustly Optimized BERT Pretraining Approach}, 
@@ -61,21 +60,6 @@ keywords = {binary code analysis, Type inference, program executables}
 	pages = {143--153},
 	file = {Ingediende versie:C\:\\Users\\aalkaswan\\Zotero\\storage\\NM33LK4Y\\Allamanis - 2019 - The adverse effects of code duplication in machine.pdf:application/pdf},
 }
-@inproceedings{leclair_recommendations,
-	address = {Minneapolis, Minnesota},
-	title = {Recommendations for {Datasets} for {Source} {Code} {Summarization}},
-	url = {https://aclanthology.org/N19-1394},
-	doi = {10.18653/v1/N19-1394},
-	abstract = {Source Code Summarization is the task of writing short, natural language descriptions of source code. The main use for these descriptions is in software documentation e.g. the one-sentence Java method descriptions in JavaDocs. Code summarization is rapidly becoming a popular research problem, but progress is restrained due to a lack of suitable datasets. In addition, a lack of community standards for creating datasets leads to confusing and unreproducible research results – we observe swings in performance of more than 33\% due only to changes in dataset design. In this paper, we make recommendations for these standards from experimental results. We release a dataset based on prior work of over 2.1m pairs of Java methods and one sentence method descriptions from over 28k Java projects. We describe the dataset and point out key differences from natural language data, to guide and support future researchers.},
-	urldate = {2022-02-14},
-	booktitle = {Proceedings of the 2019 {Conference} of the {North} {American} {Chapter} of the {Association} for {Computational} {Linguistics}: {Human} {Language} {Technologies}, {Volume} 1 ({Long} and {Short} {Papers})},
-	publisher = {Association for Computational Linguistics},
-	author = {LeClair, Alexander and McMillan, Collin},
-	month = jun,
-	year = {2019},
-	pages = {3931--3937},
-	file = {Full Text PDF:C\:\\Users\\aalkaswan\\Zotero\\storage\\E284Q76U\\LeClair en McMillan - 2019 - Recommendations for Datasets for Source Code Summa.pdf:application/pdf},
-}
 @inproceedings{recommend_summarization,
     title = "Recommendations for Datasets for Source Code Summarization",
     author = "LeClair, Alexander  and
@@ -90,57 +74,28 @@ keywords = {binary code analysis, Type inference, program executables}
     pages = "3931--3937",
     abstract = "Source Code Summarization is the task of writing short, natural language descriptions of source code. The main use for these descriptions is in software documentation e.g. the one-sentence Java method descriptions in JavaDocs. Code summarization is rapidly becoming a popular research problem, but progress is restrained due to a lack of suitable datasets. In addition, a lack of community standards for creating datasets leads to confusing and unreproducible research results {--} we observe swings in performance of more than 33{\%} due only to changes in dataset design. In this paper, we make recommendations for these standards from experimental results. We release a dataset based on prior work of over 2.1m pairs of Java methods and one sentence method descriptions from over 28k Java projects. We describe the dataset and point out key differences from natural language data, to guide and support future researchers.",
 }
-@article{CodeT5,
-  author    = {Yue Wang and
-               Weishi Wang and
-               Shafiq R. Joty and
-               Steven C. H. Hoi},
-  title     = {CodeT5: Identifier-aware Unified Pre-trained Encoder-Decoder Models
-               for Code Understanding and Generation},
-  journal   = {CoRR},
-  volume    = {abs/2109.00859},
-  year      = {2021},
-  url       = {https://arxiv.org/abs/2109.00859},
-  eprinttype = {arXiv},
-  eprint    = {2109.00859},
-  timestamp = {Mon, 20 Sep 2021 16:29:41 +0200},
-  biburl    = {https://dblp.org/rec/journals/corr/abs-2109-00859.bib},
-  bibsource = {dblp computer science bibliography, https://dblp.org}
+@inproceedings{CodeT5,
+  title={CodeT5: Identifier-aware Unified Pre-trained Encoder-Decoder Models for Code Understanding and Generation},
+  author={Wang, Yue and Wang, Weishi and Joty, Shafiq and Hoi, Steven CH},
+  booktitle={Proceedings of the 2021 Conference on Empirical Methods in Natural Language Processing},
+  pages={8696--8708},
+  year={2021}
 }
 
-@misc{CodeBERT,
-  doi = {10.48550/ARXIV.2002.08155},
-  
-  url = {https://arxiv.org/abs/2002.08155},
-  
-  author = {Feng, Zhangyin and Guo, Daya and Tang, Duyu and Duan, Nan and Feng, Xiaocheng and Gong, Ming and Shou, Linjun and Qin, Bing and Liu, Ting and Jiang, Daxin and Zhou, Ming},
-  
-  keywords = {Computation and Language (cs.CL), Programming Languages (cs.PL), FOS: Computer and information sciences, FOS: Computer and information sciences},
-  
-  title = {CodeBERT: A Pre-Trained Model for Programming and Natural Languages},
-  
-  publisher = {arXiv},
-  
-  year = {2020},
-  
-  copyright = {arXiv.org perpetual, non-exclusive license}
+@inproceedings{CodeBERT,
+  title={CodeBERT: A Pre-Trained Model for Programming and Natural Languages},
+  author={Feng, Zhangyin and Guo, Daya and Tang, Duyu and Duan, Nan and Feng, Xiaocheng and Gong, Ming and Shou, Linjun and Qin, Bing and Liu, Ting and Jiang, Daxin and others},
+  booktitle={Findings of the Association for Computational Linguistics: EMNLP 2020},
+  pages={1536--1547},
+  year={2020}
 }
-@misc{Transformers,
-  doi = {10.48550/ARXIV.1706.03762},
-  
-  url = {https://arxiv.org/abs/1706.03762},
-  
-  author = {Vaswani, Ashish and Shazeer, Noam and Parmar, Niki and Uszkoreit, Jakob and Jones, Llion and Gomez, Aidan N. and Kaiser, Lukasz and Polosukhin, Illia},
-  
-  keywords = {Computation and Language (cs.CL), Machine Learning (cs.LG), FOS: Computer and information sciences, FOS: Computer and information sciences},
-  
-  title = {Attention Is All You Need},
-  
-  publisher = {arXiv},
-  
-  year = {2017},
-  
-  copyright = {arXiv.org perpetual, non-exclusive license}
+
+@inproceedings{Transformers,
+  title={Attention is all you need},
+  author={Vaswani, Ashish and Shazeer, Noam and Parmar, Niki and Uszkoreit, Jakob and Jones, Llion and Gomez, Aidan N and Kaiser, {\L}ukasz and Polosukhin, Illia},
+  booktitle={Proceedings of the 31st International Conference on Neural Information Processing Systems},
+  pages={6000--6010},
+  year={2017}
 }
 @misc{CodeX,
   doi = {10.48550/ARXIV.2107.03374},
@@ -188,15 +143,16 @@ keywords = {binary code analysis, Type inference, program executables}
 }
 
 @article{Neutron,
-  title={Neutron: an attention-based neural decompiler},
-  author={Liang, Ruigang and Cao, Ying and Hu, Peiwei and Chen, Kai},
-  journal={Cybersecurity},
-  volume={4},
-  number={1},
-  pages={1--13},
-  year={2021},
-  publisher={Springer}
+author = {Liang, Ruigang and Cao, Ying and Hu, Peiwei and Chen, Kai},
+year = {2021},
+month = {03},
+pages = {5},
+title = {Neutron: an attention-based neural decompiler},
+volume = {4},
+journal = {Cybersecurity},
+doi = {10.1186/s42400-021-00070-0}
 }
+
 @inproceedings{StochFuzz,
   title={StochFuzz: Sound and Cost-effective Fuzzing of Stripped Binaries by Incremental and Stochastic Rewriting},
   author={Zhang, Zhuo and You, Wei and Tao, Guanhong and Aafer, Yousra and Liu, Xuwei and Zhang, Xiangyu},
@@ -222,18 +178,39 @@ keywords = {binary code analysis, Type inference, program executables}
   year={2005}
 }
 @article{optimizationObfuscation,
-  title={Measuring the robustness of source program obfuscation},
-  author={Blazy, Sandrine and Riaud, Stephanie},
-  journal={Groupement De Recherche CNRS du G{\'e}nie de la Programmation et du Logiciel},
-  pages={203},
-  year={2014}
+author = {Blazy, Sandrine and Riaud, St\'{e}phanie},
+title = {Measuring the Robustness of Source Program Obfuscation: Studying the Impact of Compiler Optimizations on the Obfuscation of C Programs},
+year = {2014},
+isbn = {9781450322782},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/2557547.2557577},
+doi = {10.1145/2557547.2557577},
+abstract = {Obfuscation is a commonly used technique to protect software from the reverse engineering process. Advanced obfuscations usually rely on semantic properties of programs and thus may be performed on source programs. This raises the question of how to be sure that the binary code (that is effectively running) is still obfuscated.This paper presents a data obfuscation of C programs and a methodology to evaluate how the obfuscation resists to the GCC compiler. Information generated by the compiler (including effects of relevant optimizations that could deobfuscate programs) and a study of the disassembled binary code, as well as a dynamic analysis of the performances of binary code show that our obfuscation is worthwhile.},
+booktitle = {Proceedings of the 4th ACM Conference on Data and Application Security and Privacy},
+pages = {123–126},
+numpages = {4},
+keywords = {obfuscation, compiler optimization, anti-reverse engineering},
+location = {San Antonio, Texas, USA},
+series = {CODASPY '14}
 }
+
 @inproceedings{reverseEngineerProcess,
-  title={An Observational Investigation of Reverse $\{$Engineers’$\}$ Processes},
-  author={Votipka, Daniel and Rabin, Seth and Micinski, Kristopher and Foster, Jeffrey S and Mazurek, Michelle L},
-  booktitle={29th USENIX Security Symposium (USENIX Security 20)},
-  pages={1875--1892},
-  year={2020}
+author = {Votipka, Daniel and Rabin, Seth and Micinski, Kristopher and Foster, Jeffrey S. and Mazurek, Michelle L.},
+title = {An Observational Investigation of Reverse Engineers' Process and Mental Models},
+year = {2019},
+isbn = {9781450359719},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/3290607.3313040},
+doi = {10.1145/3290607.3313040},
+abstract = {Reverse engineering is a complex task essential to several software security jobs like vulnerability discovery and malware analysis. While traditional program comprehension tasks (e.g., program maintenance or debugging) have been thoroughly studied, reverse engineering diverges from these tasks as reverse engineers do not have access to developers, source code, comments, or internal documentation. Further, reverse engineers often have to overcome countermeasures employed by the developer to make the task harder (e.g., symbol stripping, packing, obfuscation). Significant research effort has gone into providing program analysis tools to support reverse engineers. However, little work has been done to understand the way they think and analyze programs, potentially leading to the lack of adoption of these tools among practitioners. This paper reports on a first step toward better understanding the reverse engineer's process and mental models and provides directions for improving program analysis tools to better fit their users. We present the initial results of a semi-structured, observational interview study of reverse engineers (n=15). Each interview investigated the questions they asked while probing the program, how they answered these questions, and the decisions made throughout. Our initial observations suggest that reverse engineers rely on a variety of reference points in both the program text and structure as well as its dynamic behavior to build hypotheses about the program's function and identify points of interest for future exploration. In most cases, our reverse engineers used a mix of static and dynamic analysis---mostly manually---to verify these hypotheses. Throughout, they rely on intuition built up over past experience. From these observations, we provide recommendations for user interface and program analysis improvements to support the reverse engineer.},
+booktitle = {Extended Abstracts of the 2019 CHI Conference on Human Factors in Computing Systems},
+pages = {1–6},
+numpages = {6},
+keywords = {program comprehension, reverse engineering},
+location = {Glasgow, Scotland Uk},
+series = {CHI EA '19}
 }
 
 @inproceedings{intermediateTraining,
@@ -323,9 +300,21 @@ keywords = {binary code analysis, Type inference, program executables}
   copyright = {Creative Commons Attribution 4.0 International}
 }
 @article{Nero,
-  title={Neural reverse engineering of stripped binaries},
-  author={David, Yaniv and Alon, Uri and Yahav, Eran},
-  year={2019}
+author = {David, Yaniv and Alon, Uri and Yahav, Eran},
+title = {Neural Reverse Engineering of Stripped Binaries Using Augmented Control Flow Graphs},
+year = {2020},
+issue_date = {November 2020},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+volume = {4},
+number = {OOPSLA},
+url = {https://doi.org/10.1145/3428293},
+doi = {10.1145/3428293},
+journal = {Proceedings of the ACM on Programming Languages},
+month = {nov},
+articleno = {225},
+numpages = {28},
+keywords = {Static Binary Analysis, Neural Reverse Engineering}
 }
 @inproceedings{PolyglotCodeBERT,
   title={Multilingual training for software engineering},
@@ -372,11 +361,15 @@ series = {ACSAC '19}
   publisher={Springer}
 }
 @inproceedings{Rouge,
-  title={Rouge: A package for automatic evaluation of summaries},
-  author={Lin, Chin-Yew},
-  booktitle={Text summarization branches out},
-  pages={74--81},
-  year={2004}
+  title = "{ROUGE}: A Package for Automatic Evaluation of Summaries",
+    author = "Lin, Chin-Yew",
+    booktitle = "Text Summarization Branches Out",
+    month = jul,
+    year = "2004",
+    address = "Barcelona, Spain",
+    publisher = "Association for Computational Linguistics",
+    url = "https://aclanthology.org/W04-1013",
+    pages = "74--81",
 }
 
 @misc{CodeSumSmallLocal,
@@ -406,4 +399,83 @@ address = {New York, NY, USA},
 url = {https://doi.org/10.1145/3468264.3468588},
 pages = {1105–1116},
 numpages = {12}
+}
+
+@article{seq2seq,
+  title={Sequence to sequence learning with neural networks},
+  author={Sutskever, Ilya and Vinyals, Oriol and Le, Quoc V},
+  journal={Advances in neural information processing systems},
+  volume={27},
+  year={2014}
+}
+
+@article{LSTM,
+  title={Long short-term memory},
+  author={Schmidhuber, J{\"u}rgen and Hochreiter, Sepp and others},
+  journal={Neural Comput},
+  volume={9},
+  number={8},
+  pages={1735--1780},
+  year={1997}
+}
+
+@article{CNN,
+  title={Backpropagation applied to handwritten zip code recognition},
+  author={LeCun, Yann and Boser, Bernhard and Denker, John S and Henderson, Donnie and Howard, Richard E and Hubbard, Wayne and Jackel, Lawrence D},
+  journal={Neural computation},
+  volume={1},
+  number={4},
+  pages={541--551},
+  year={1989},
+  publisher={MIT Press}
+}
+@article{RNN,
+  title={Learning representations by back-propagating errors},
+  author={Rumelhart, David E and Hinton, Geoffrey E and Williams, Ronald J},
+  journal={nature},
+  volume={323},
+  number={6088},
+  pages={533--536},
+  year={1986},
+  publisher={Nature Publishing Group}
+}
+@article{GPT3,
+  title={Language models are few-shot learners},
+  author={Brown, Tom and Mann, Benjamin and Ryder, Nick and Subbiah, Melanie and Kaplan, Jared D and Dhariwal, Prafulla and Neelakantan, Arvind and Shyam, Pranav and Sastry, Girish and Askell, Amanda and others},
+  journal={Advances in neural information processing systems},
+  volume={33},
+  pages={1877--1901},
+  year={2020}
+}
+@incollection{wordnet,
+  title={WordNet},
+  author={Fellbaum, Christiane},
+  booktitle={Theory and applications of ontology: computer applications},
+  pages={231--243},
+  year={2010},
+  publisher={Springer}
+}
+@inproceedings{dualChannel,
+  title={A theory of dual channel constraints},
+  author={Casalnuovo, Casey and Barr, Earl T and Dash, Santanu Kumar and Devanbu, Prem and Morgan, Emily},
+  booktitle={Proceedings of the ACM/IEEE 42nd International Conference on Software Engineering: New Ideas and Emerging Results},
+  pages={25--28},
+  year={2020}
+}
+@article{naturalnessCode,
+author = {Hindle, Abram and Barr, Earl T. and Gabel, Mark and Su, Zhendong and Devanbu, Premkumar},
+title = {On the Naturalness of Software},
+year = {2016},
+issue_date = {May 2016},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+volume = {59},
+number = {5},
+issn = {0001-0782},
+url = {https://doi.org/10.1145/2902362},
+doi = {10.1145/2902362},
+journal = {Commun. ACM},
+month = {apr},
+pages = {122–131},
+numpages = {10}
 }
