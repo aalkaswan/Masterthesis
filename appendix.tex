@@ -32,7 +32,7 @@ abbreviations.
 In this appendix we report on the application of the extreme summarisation task on our dataset. 
 
 \section{Methodology and Experimental Setup}
-We apply the parameters and setup as provided by~\citeauthor{PolyglotCodeBERT} for the extreme summarisation task.\footnote{Model and parameters: \url{https://zenodo.org/record/5670434}} Note that the authors use their setup for the summarisation task and only change the maximum target length of the output to 10 tokens. We fine-tune a CodeBERT~\cite{CodeBERT} model for 5 epochs, we chose this limit for brevity as we found that all models converged during the third or fourth epoch \ref{fig:ExtremeLoss}. After every epoch we evaluate the model using the validation set, and finally the model is tested using the test set.
+We apply the parameters and setup as provided by~\citeauthor{PolyglotCodeBERT} for the extreme summarisation task.\footnote{Model and parameters: \url{https://zenodo.org/record/5670434}} Note that the authors use their setup for the summarisation task and only change the maximum target length of the output to 10 tokens. We fine-tune a CodeBERT~\cite{CodeBERT} model for 5 epochs, we chose this limit for brevity as we found that all models converged during the third or fourth epoch as can be observed in figure~\ref{fig:ExtremeLoss}. After every epoch we evaluate the model using the validation set, and finally the model is tested using the test set.
 
 
 \begin{figure}[h]
@@ -44,7 +44,7 @@ We apply the parameters and setup as provided by~\citeauthor{PolyglotCodeBERT} f
 
 To prepare the dataset, we use the same pipeline as shown in figure~\ref{fig:dataCollection}. Instead of extracting the comment data, the name of the functions is extracted from their aligned source code. These function names will function as reference. Since missing or unalignable documentation is no longer an issue, we are able to collect significantly more decompiled function-function name pairs. Our dataset consists of 2.1m decompiled and 630k stripped samples. Recall that unstripped decompiled functions still retain the function name after decompilation, so we selectively strip away the function name from the function definition and any recursive calls in the function bodies. 
 
-The dataset is split into a train, test and validation set. Similarly to the regular summarisation task we split them in a cross-project manner, with the sets constituting 80\%, 10\% and 10\% of the complete dataset respectively. We followed the recommendations by ~\citeauthor{recommend_summarization} on the dataset construction. 
+The dataset is split into a train, test and validation set. Similarly to the regular summarisation task we split them in a cross-project manner, with the sets constituting 80\%, 10\% and 10\% of the complete dataset respectively. We followed the recommendations by~\citeauthor{recommend_summarization} on the dataset construction. 
 
 Since the output of the model is so short and generally contains up to 3 tokens~\cite{ExtremeSummarization}, BLEU would be unfit as a metric. Similarly to \citeauthor{ExtremeSummarization} and \citeauthor{PolyglotCodeBERT}, we chose to use the F1-score.
 \[\mathit{F1} = \frac{2*\mathit{Precision}*\mathit{Recall}}{\mathit{Precision}+\mathit{Recall}} * 100\] 
@@ -53,7 +53,7 @@ Every function name is broken up into subtokens, the name "popStack'' would ther
 \citeauthor{PolyglotCodeBERT} report F1 scores ranging from 24 to 54 and F1 scores ranging from 0.41 and 0.54 with regular CodeBERT and PolyglotCodeBERT respectively. Note that these models were trained and evaluated on the CodeXGLUE~\cite{CodeXGlue} dataset which is deduplicated, while our own dataset is not. %Find limit for unusable samples
 
 \section{Results}
-We find that the results resembled the results from the regular code summarisation task. The CodeBERT model achieved an F1 score of 20.6 and 5.45 on the stripped and unstripped code respectively. Manual assessment of the produced samples shows that the model for unstripped code could produce some usable samples, but the stripped model was unable to produce almost anything of value.
+We find that the results resembled the results from the regular code summarisation task. The CodeBERT model achieved an F1 score of 20.6 and 5.45 on the stripped and unstripped code respectively. Manual assessment of the produced samples shows that the model for unstripped code could produce some usable samples, but the stripped model was unable to produce almost anything of value, as can be observed in table~\ref{fig:extremesumex}.
 
 \begin{table}[tbh]
 \begin{tabular}{l|ll}
@@ -65,4 +65,5 @@ r id storage foreach           & queue  fore ach           & hash  find         
 map init                       & pro g  init               & c se g  open                
 \end{tabular}
 \caption{Sample of CodeBERT extreme summarisation model output}
+\label{fig:extremesumex}
 \end{table}
