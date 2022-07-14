@@ -42,7 +42,7 @@ We apply the parameters and setup as provided by~\citeauthor{PolyglotCodeBERT} f
   \label{fig:ExtremeLoss}
 \end{figure}
 
-To prepare the dataset, we use the same pipeline as shown in~\ref{fig:dataCollection}. Instead of extracting the comment data, the name of the functions is extracted from their aligned source code. These function names will function as reference. Since missing or unalignable documentation is no longer an issue, we are able to collect significantly more decompiled function-function name pairs. Our dataset consists of 2.1m decompiled and 630k stripped samples. Recall that unstripped decompiled functions still retain the function name after decompilation, so we selectively strip away the function name from the function definition and any recursive calls in the function bodies. 
+To prepare the dataset, we use the same pipeline as shown in figure~\ref{fig:dataCollection}. Instead of extracting the comment data, the name of the functions is extracted from their aligned source code. These function names will function as reference. Since missing or unalignable documentation is no longer an issue, we are able to collect significantly more decompiled function-function name pairs. Our dataset consists of 2.1m decompiled and 630k stripped samples. Recall that unstripped decompiled functions still retain the function name after decompilation, so we selectively strip away the function name from the function definition and any recursive calls in the function bodies. 
 
 The dataset is split into a train, test and validation set. Similarly to the regular summarisation task we split them in a cross-project manner, with the sets constituting 80\%, 10\% and 10\% of the complete dataset respectively. We followed the recommendations by ~\citeauthor{recommend_summarization} on the dataset construction. 
 
@@ -66,8 +66,3 @@ map init                       & pro g  init               & c se g  open
 \end{tabular}
 \caption{Sample of CodeBERT extreme summarisation model output}
 \end{table}
-
-
-% \newpage
-% \chapter{\label{app:Dataset} Dataset}
-
